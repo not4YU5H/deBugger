@@ -1,0 +1,23 @@
+package com.codefury.test;
+
+import com.codefury.service.BugTrackingService;
+import com.codefury.service.BugTrackingServiceImpl;
+
+public class BugTrackingTest {
+    public static void main(String[] args) {
+
+        BugTrackingService bugTrackingService = new BugTrackingServiceImpl();
+        //Authentication and Authorization points
+
+
+
+
+        //Sample login attempt
+        String token = bugTrackingService.login("johndoe","password123");
+        System.out.println(token);
+        int authorization = bugTrackingService.fetchUsers(token);
+        System.out.println(authorization);// this will print 2 for the time being as john doe is set as Developer
+
+
+    }
+}
