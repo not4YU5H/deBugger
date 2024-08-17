@@ -1,0 +1,44 @@
+.new-project-container {
+    width: 400px;
+    margin: 50px auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.new-project-container h2 {
+    text-align: center;
+    color: #007bff;
+    margin-bottom: 20px;
+}
+
+.new-project-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.new-project-container input,
+.new-project-container select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #cccccc;
+    box-sizing: border-box;
+}
+
+.new-project-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.new-project-container button:hover {
+    background-color: #0056b3;
+}

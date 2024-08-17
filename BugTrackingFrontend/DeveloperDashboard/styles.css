@@ -1,0 +1,59 @@
+.dashboard-container {
+    width: 80%;
+    margin: auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+header {
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #cccccc;
+}
+
+.user-info h2 {
+    color: #007bff;
+}
+
+.projects {
+    margin: 20px 0;
+}
+
+.project {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.project h4 {
+    margin: 0;
+    color: #333333;
+}
+
+.project ul {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.project ul li {
+    margin-bottom: 5px;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}

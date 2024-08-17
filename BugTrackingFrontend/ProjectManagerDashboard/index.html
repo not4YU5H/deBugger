@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Manager Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header>
+            <h1>Project Manager Dashboard</h1>
+        </header>
+        <section class="user-info">
+            <h2>Welcome, [Project Manager Name]</h2>
+            <p>Email: manager@example.com</p>
+            <p>Last Login: [Date & Time]</p>
+        </section>
+        <section class="projects">
+            <h3>Your Projects</h3>
+            <div class="project">
+                <h4>Project Name</h4>
+                <p>Status: In Progress</p>
+                <button onclick="viewProjectDetails()">View Details</button>
+            </div>
+            <!-- Repeat for each project -->
+        </section>
+        <section class="actions">
+            <button onclick="createNewProject()">Create New Project</button>
+        </section>
+    </div>
+    <script src="scripts.js"></script>
+</body>
+</html>

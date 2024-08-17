@@ -1,0 +1,54 @@
+.details-container {
+    width: 80%;
+    margin: auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+header h1, header p {
+    color: #007bff;
+}
+
+.team-members, .bugs {
+    margin: 20px 0;
+}
+
+.team-members ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.team-members li {
+    margin-bottom: 10px;
+}
+
+.bugs table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.bugs th, .bugs td {
+    padding: 10px;
+    border: 1px solid #dddddd;
+    text-align: left;
+}
+
+.bugs th {
+    background-color: #f2f2f2;
+}
+
+.bugs button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.bugs button:hover {
+    background-color: #0056b3;
+}
