@@ -1,5 +1,3 @@
-package com.codefury.test;
-
 import com.codefury.beans.User;
 import com.codefury.exception.InvalidTokenException;
 import com.codefury.service.BugTrackingService;
@@ -13,14 +11,13 @@ public class BugTrackingTest {
         
         //Upload Json formatt for user details.
         //The function recieves the file path into it. It then does the manipulation and passes it on
-        String filepath="src/users.json";
-        if(filepath.contains(".json")){
+        String filepath="users.json";
+        if(filepath.contains("src/main/java/users.json")){
             //It will give false because the users are already added once.
             //from the same file.
             boolean status = bugTrackingService.addUsersFromJson(filepath);
             System.out.println(status);
         }
-        
         
         
 
@@ -29,6 +26,8 @@ public class BugTrackingTest {
         String token = bugTrackingService.login("johndoe","password123");
 
 
+
+        //fetching user information
         User user = null;
         try {
             user = bugTrackingService.fetchUserInfo(token);
@@ -36,6 +35,8 @@ public class BugTrackingTest {
             e.getMessage();
         }
         System.out.println(user);
+
+        //
         
         
 

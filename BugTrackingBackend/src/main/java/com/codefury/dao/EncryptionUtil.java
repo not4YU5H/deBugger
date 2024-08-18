@@ -13,7 +13,7 @@ public class EncryptionUtil {
 
     private static final String ALGORITHM = "RSA";
     private static final String KEYSTORE_TYPE = "JKS";
-    private static final String KEYSTORE_PATH = "keystore.jks";
+    private static final String KEYSTORE_PATH = "src/main/java/keystore.jks";
     private static final String KEYSTORE_PASSWORD = "changeit";
     private static final String KEY_ALIAS = "mykey";
     private static final String KEY_PASSWORD = "changeit";
