@@ -1,5 +1,6 @@
 package com.codefury.dao;
 
+import com.codefury.beans.Project;
 import com.codefury.beans.User;
 import com.codefury.exception.InvalidTokenException;
 
@@ -12,4 +13,6 @@ public interface BugTrackingDao {
     boolean addUsersFromJson(List<User>users);
 
     User fetchUserInfo(String token) throws InvalidTokenException;
+
+    List<Project> fetchProjectsManagedByManagerId(String token) throws InvalidTokenException;
 }

@@ -1,5 +1,6 @@
 package com.codefury.service;
 
+import com.codefury.beans.Project;
 import com.codefury.beans.User;
 import com.codefury.dao.BugTrackingDao;
 import com.codefury.dao.StorageFactory;
@@ -96,6 +97,13 @@ public class BugTrackingServiceImpl implements BugTrackingService{
 
         return bugTrackingDao.fetchUserInfo(token);
     }
+
+    @Override
+    public List<Project> fetchProjectsManagedByManagerId(String token) throws InvalidTokenException {
+        return bugTrackingDao.fetchProjectsManagedByManagerId(token);
+    }
+
+
 
 
 }
