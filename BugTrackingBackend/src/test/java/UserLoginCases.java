@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 public class UserLoginCases {
     private BugTrackingService bugTrackingService;
 
-    private String username = "johndoe";
+    private String username = "george@1234";
     private String password = "password123";
 
     @BeforeEach

@@ -10,8 +10,8 @@
     "dob": "1985-02-20",
     "gender": "Female",
     "profilePictureUrl": "http://example.com/profile/alicesmith.jpg",
-    "role": "Project Manager",
-    "assignedProjects": 12,
+    "role": "Manager",
+    "assignedProjects": 0,
     "lastLoggedInDatetime": "2023-08-15 09:30:00"
   },
   {
@@ -26,7 +26,7 @@
     "gender": "Male",
     "profilePictureUrl": "http://example.com/profile/bobjones.jpg",
     "role": "Tester",
-    "assignedProjects": 7,
+    "assignedProjects": 0,
     "lastLoggedInDatetime": "2023-08-14 14:45:00"
   },
   {
@@ -40,8 +40,8 @@
     "dob": "1995-04-15",
     "gender": "Female",
     "profilePictureUrl": "http://example.com/profile/caroldavis.jpg",
-    "role": "Designer",
-    "assignedProjects": 3,
+    "role": "Developer",
+    "assignedProjects": 0,
     "lastLoggedInDatetime": "2023-08-13 11:20:00"
   },
   {
@@ -56,7 +56,7 @@
     "gender": "Male",
     "profilePictureUrl": "http://example.com/profile/davidbrown.jpg",
     "role": "Developer",
-    "assignedProjects": 10,
+    "assignedProjects": 0,
     "lastLoggedInDatetime": "2023-08-12 16:00:00"
   },
   {
@@ -70,8 +70,8 @@
     "dob": "1991-09-30",
     "gender": "Female",
     "profilePictureUrl": "http://example.com/profile/emmajohnson.jpg",
-    "role": "Administrator",
-    "assignedProjects": 15,
+    "role": "Manager",
+    "assignedProjects": 0,
     "lastLoggedInDatetime": "2023-08-11 08:10:00"
   },
   {
@@ -86,7 +86,7 @@
     "gender": "Male",
     "profilePictureUrl": "http://example.com/profile/frankmiller.jpg",
     "role": "Tester",
-    "assignedProjects": 8,
+    "assignedProjects": 0,
     "lastLoggedInDatetime": "2023-08-10 13:25:00"
   },
   {
@@ -100,8 +100,8 @@
     "dob": "1993-12-12",
     "gender": "Female",
     "profilePictureUrl": "http://example.com/profile/gracelewis.jpg",
-    "role": "Graphic Designer",
-    "assignedProjects": 5,
+    "role": "Developer",
+    "assignedProjects": 0,
     "lastLoggedInDatetime": "2023-08-09 17:45:00"
   },
   {
@@ -115,8 +115,8 @@
     "dob": "1983-06-28",
     "gender": "Male",
     "profilePictureUrl": "http://example.com/profile/henryadams.jpg",
-    "role": "DevOps Engineer",
-    "assignedProjects": 18,
+    "role": "Manager",
+    "assignedProjects": 0,
     "lastLoggedInDatetime": "2023-08-08 12:30:00"
   },
   {
@@ -130,8 +130,8 @@
     "dob": "1975-10-25",
     "gender": "Female",
     "profilePictureUrl": "http://example.com/profile/ireneharris.jpg",
-    "role": "Support Engineer",
-    "assignedProjects": 6,
+    "role": "Tester",
+    "assignedProjects": 0,
     "lastLoggedInDatetime": "2023-08-07 19:50:00"
   },
   {
@@ -145,8 +145,8 @@
     "dob": "1982-02-18",
     "gender": "Male",
     "profilePictureUrl": "http://example.com/profile/jameskelly.jpg",
-    "role": "Network Administrator",
-    "assignedProjects": 20,
+    "role": "Manager",
+    "assignedProjects": 0,
     "lastLoggedInDatetime": "2023-08-06 07:15:00"
   }
 ]
