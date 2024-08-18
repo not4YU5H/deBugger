@@ -202,13 +202,13 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
 
     @Override
     public boolean createProject(String token, Project proj, List<Integer> team) throws InvalidTokenException, ManagerMaxProjectException, ProjectStartDateException, NoAccessException, TeamMemberException, UserNotFoundException {
-
+        List creds = isAuthorized(token);
         //TO check if he is a manager or not
-        int auth = (int) isAuthorized(token).get(0);
-        if (auth != 0) {
+        int auth = (int) creds.get(0);
+        if (auth != 0) { //To check if He has admin access
             throw new NoAccessException("You dont have access to the Feature");
         }
-        int id = (int) isAuthorized(token).get(1);
+        int id = (int) creds.get(1);
         try {
             //Check if he has more than 4 projects then raise exception
             PreparedStatement pst = conn.prepareStatement("select * from USERS where USERID=?;");
