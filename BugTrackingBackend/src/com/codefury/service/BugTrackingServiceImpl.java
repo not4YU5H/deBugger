@@ -4,6 +4,7 @@ import com.codefury.beans.User;
 import com.codefury.dao.BugTrackingDao;
 import com.codefury.dao.StorageFactory;
 //jar files have tp be manually downloaded from the internet
+import com.codefury.exception.InvalidTokenException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.BufferedReader;
@@ -13,9 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class BugTrackingServiceImpl implements BugTrackingService{
     private BugTrackingDao bugTrackingDao;
@@ -30,10 +29,6 @@ public class BugTrackingServiceImpl implements BugTrackingService{
         return bugTrackingDao.login(username,password);
     }
 
-    @Override
-    public int fetchUsers(String token) {
-        return bugTrackingDao.fetchUsers(token);
-    }
 
     public static List<User> parseJson(String content) {
         List<User> users = new ArrayList<>();
@@ -94,6 +89,12 @@ public class BugTrackingServiceImpl implements BugTrackingService{
             System.out.println("Failed to read JSON data from file.");
         }
         return bugTrackingDao.addUsersFromJson(users);
+    }
+
+    @Override
+    public User fetchUserInfo(String token) throws InvalidTokenException {
+
+        return bugTrackingDao.fetchUserInfo(token);
     }
 
 
