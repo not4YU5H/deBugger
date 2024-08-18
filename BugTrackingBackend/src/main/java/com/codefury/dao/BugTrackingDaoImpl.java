@@ -1,5 +1,6 @@
 package com.codefury.dao;
 
+import com.codefury.beans.Project;
 import com.codefury.beans.User;
 import com.codefury.exception.InvalidTokenException;
 
@@ -183,10 +184,51 @@ public class BugTrackingDaoImpl implements BugTrackingDao{
                 System.out.println(e.getMessage());
                 return null;
             }
-
-
         }
-
         return null;
     }
+
+
+    @Override
+    public List<Project> fetchProjectsManagedByManagerId(String token) throws InvalidTokenException {
+        // Call isAuthorized() once and store its results
+        List<Object> authResult = isAuthorized(token);
+        int authLevel = (int) authResult.get(0);
+        int managerId = (int) authResult.get(1);
+
+        // Check if the user has Admin level access
+        if (authLevel == 0) {
+            List<Project> projects = new ArrayList<>();
+            String query = "SELECT p.PROJECTID, p.NAME, p.DESCRIPTION, p.START_DATE, p.STATUS " +
+                    "FROM PROJECT p " +
+                    "JOIN TEAMS t ON p.TEAM_ID = t.TEAMID " +
+                    "WHERE t.MANAGER_ID = ?;";
+
+            try (PreparedStatement pst = conn.prepareStatement(query)) {
+                pst.setInt(1, managerId);
+                ResultSet rs = pst.executeQuery();
+
+                while (rs.next()) {
+                    Project project = new Project();
+                    project.setProjectId(rs.getInt("PROJECTID"));
+                    project.setName(rs.getString("NAME"));
+                    project.setDescription(rs.getString("DESCRIPTION"));
+                    // Convert java.sql.Date to java.util.Date and set to project
+                    java.sql.Date sqlDate = rs.getDate("START_DATE");
+                    Date utilDate = new Date(sqlDate.getTime());
+                    project.setStartDate(utilDate);
+
+                    project.setStatus(rs.getString("STATUS"));
+                    projects.add(project);
+                }
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+            return projects;
+        }
+        return null;
+    }
+
+
+
 }
