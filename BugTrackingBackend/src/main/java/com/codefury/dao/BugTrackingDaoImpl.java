@@ -43,7 +43,7 @@ public class BugTrackingDaoImpl implements BugTrackingDao{
             }
         }
         if(!tokenvalidity.containsKey(token)){
-            throw new InvalidTokenException("Your Token is invalid Login Again");
+            throw new InvalidTokenException("Invalid Token");
         }
 
         String auth;
@@ -113,6 +113,9 @@ public class BugTrackingDaoImpl implements BugTrackingDao{
                     throw new RuntimeException(e);
                 }
             }
+            else{
+                return null;
+            }
 
 
         } catch (SQLException e) {
@@ -120,7 +123,7 @@ public class BugTrackingDaoImpl implements BugTrackingDao{
 
         }
 
-        return "";
+
     }
 
 
