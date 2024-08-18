@@ -1,6 +1,8 @@
 package com.codefury.dao;
 
+import com.codefury.beans.Project;
 import com.codefury.beans.User;
+import com.codefury.exception.BugNotFoundException;
 import com.codefury.exception.InvalidTokenException;
 
 import java.sql.*;
@@ -23,7 +25,7 @@ public class BugTrackingDaoImpl implements BugTrackingDao{
     }
 
 
-    private static boolean compareTime(LocalDateTime dateTime1, LocalDateTime dateTime2) {
+    public static boolean compareTime(LocalDateTime dateTime1, LocalDateTime dateTime2) {
         // Calculate the duration between the two LocalDateTime instances
         Duration duration = Duration.between(dateTime1, dateTime2);
         // 10 minutes in seconds
@@ -153,6 +155,55 @@ public class BugTrackingDaoImpl implements BugTrackingDao{
         }
         return true;
     }
+
+
+    @Override
+    public List<Project> fetchProjectInfoByUserId(int userId) {
+        List<Project> projects = new ArrayList<>();
+        String query = "SELECT p.* " +
+                "FROM PROJECT p " +
+                "JOIN USER_PROJECT up ON p.PROJECTID = up.PROJECT_ID " +
+                "WHERE up.USER_ID = ?;";
+        try {
+            PreparedStatement pst = conn.prepareStatement(query);
+            pst.setInt(1, userId);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                Project project = new Project();
+                project.setProjectId(rs.getInt("PROJECTID"));
+                project.setName(rs.getString("NAME"));
+                project.setDescription(rs.getString("DESCRIPTION"));
+                project.setStakeHolders(rs.getString("STAKE_HOLDERS"));
+                project.setClientName(rs.getString("CLIENT_NAME"));
+                project.setBudget(rs.getBigDecimal("BUDGET"));
+                project.setPoc(rs.getString("POC"));
+                project.setStartDate(rs.getDate("START_DATE"));
+                project.setTeamId(rs.getInt("TEAM_ID"));
+                project.setStatus(rs.getString("STATUS"));
+                projects.add(project);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching projects for user ID: " + userId, e);
+        }
+        return projects;
+    }
+
+
+    @Override
+    public boolean markGivenBugForClose(int bugId) throws BugNotFoundException,RuntimeException {
+        try {
+            PreparedStatement pst = conn.prepareStatement("UPDATE BUGS SET STATUS='CLOSED' WHERE BUG_ID=?;");
+            pst.setInt(1, bugId);
+            int rowsAffected = pst.executeUpdate();
+            if(!(rowsAffected > 0)) {
+                throw new BugNotFoundException("Bug not found with ID: " + bugId);
+            }else
+                return true;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error marking bug as closed: " + bugId, e);
+        }
+    }
+
 
 
     @Override
