@@ -19,7 +19,6 @@ public class DBUtil {
             String user = "root";
             String password = "codefury";
 
-
             //step 2
             try {
                 conn = DriverManager.getConnection(url,user,password);

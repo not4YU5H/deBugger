@@ -1,16 +1,14 @@
 package com.codefury.dao;
 
 import com.codefury.beans.User;
+import com.codefury.exception.InvalidTokenException;
 
 import java.sql.*;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class BugTrackingDaoImpl implements BugTrackingDao{
     private Connection conn;//Connection to DB
@@ -35,7 +33,7 @@ public class BugTrackingDaoImpl implements BugTrackingDao{
     }
     //This function checks the Authorization levels of the user based on the token passed on from the user
     //Use this function always to check for level
-    private int isAuthorized(String token){
+    private List<Object> isAuthorized(String token) throws InvalidTokenException {
         //This compares the time the token was created and the current time now to check if the token is stil valid
         //if the time stamp shows more than 10 min it gets removed from the hashmap
         //If not it moves to the authorization checks
@@ -45,26 +43,40 @@ public class BugTrackingDaoImpl implements BugTrackingDao{
             }
         }
         if(!tokenvalidity.containsKey(token)){
-            return -1;
+            throw new InvalidTokenException("Your Token is invalid Login Again");
         }
+
+        String auth;
+        int id;
+        List<Object> res = new ArrayList<>();
+
         try {
             //Splitting the decrypted string back to different strings
-            String auth = encryption.decrypt(token).split(",")[2];
-            if(auth.equals("Admin")){
-                return 0;
-            }
-            else if(auth.equals("Tester")){
-                return 1;
-            }
-            else if (auth.equals("Developer")) {
-                return 2;
-            }
-            else{
-                return -1;
-            }
+            auth = encryption.decrypt(token).split(",")[2];
+            id = Integer.parseInt(encryption.decrypt(token).split(",")[0]);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+            if(auth.equals("Admin")){
+                res.add(0);
+                res.add(id);
+
+            }
+            else if(auth.equals("Tester")){
+                res.add(1);
+                res.add(id);
+            }
+            else if (auth.equals("Developer")) {
+                res.add(2);
+                res.add(id);
+            }
+            else{
+                throw new InvalidTokenException("Token has No access to the system.");
+
+            }
+            return res;
+
     }
     //Login function returns a token string which is an encrypted string of data back to the user.
     //This helps us authorize easily by just decrypting the string and dont have to raise a db call everytime.
@@ -112,11 +124,6 @@ public class BugTrackingDaoImpl implements BugTrackingDao{
     }
 
 
-    //Sample function to check token access.
-    @Override
-    public int fetchUsers(String token) {
-        return isAuthorized(token);
-    }
 
     @Override
     public boolean addUsersFromJson(List<User> users) {
@@ -145,5 +152,38 @@ public class BugTrackingDaoImpl implements BugTrackingDao{
 
         }
         return true;
+    }
+
+
+    @Override
+    public User fetchUserInfo(String token) throws InvalidTokenException {
+        int auth = (int) isAuthorized(token).get(0);
+        int id = (int) isAuthorized(token).get(1);
+        if(auth==0||auth==1||auth==2){
+            PreparedStatement pst = null;
+            try {
+                pst = conn.prepareStatement("select * from USERS where USERID=?;");
+                pst.setInt(1,id);
+                ResultSet rs = pst.executeQuery();
+                User user = new User();
+                if(rs.next()){
+                    user.setUsername(rs.getString("USERNAME"));
+                    user.setName(rs.getString("NAME"));
+                    user.setEmail(rs.getString("EMAIL"));
+                    user.setLastLoggedInDatetime(rs.getTimestamp("LAST_LOGGED_IN_DATETIME").toLocalDateTime());
+                    user.setRole(rs.getString("ROLE"));
+                    user.setProfilePictureUrl(rs.getString("PROFILE_PICTURE_URL"));
+                    user.setAssignedProjects(rs.getInt("ASSIGNED_PROJECTS"));
+                }
+                return user;
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+                return null;
+            }
+
+
+        }
+
+        return null;
     }
 }
