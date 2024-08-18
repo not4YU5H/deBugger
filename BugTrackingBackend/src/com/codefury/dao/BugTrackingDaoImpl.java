@@ -1,15 +1,16 @@
 package com.codefury.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import com.codefury.beans.User;
+
+import java.sql.*;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BugTrackingDaoImpl implements BugTrackingDao{
     private Connection conn;//Connection to DB
@@ -48,7 +49,7 @@ public class BugTrackingDaoImpl implements BugTrackingDao{
         }
         try {
             //Splitting the decrypted string back to different strings
-            String auth = encryption.decrypt(token).split(",")[1];
+            String auth = encryption.decrypt(token).split(",")[2];
             if(auth.equals("Admin")){
                 return 0;
             }
@@ -83,9 +84,18 @@ public class BugTrackingDaoImpl implements BugTrackingDao{
             ResultSet rs = pst.executeQuery();
             if(rs.next()){
                 try {
-                    String tokenization =rs.getString("NAME")+","+rs.getString("ROLE")+","+ LocalDateTime.now();
+                    int id = rs.getInt("USERID");
+                    //Localdate.now() is used to create more randomness in the string to be encrypted. It will be almost impossible to guess the server time to the millisecond
+                    String tokenization =id+","+rs.getString("NAME")+","+rs.getString("ROLE")+","+ LocalDateTime.now();
                     String token = encryption.encrypt(tokenization);
                     tokenvalidity.put(token,LocalDateTime.now());
+
+                    //After login we have to update last logged in.
+                    pst = conn.prepareStatement("update USERS set LAST_LOGGED_IN_DATETIME=? where USERID=?");
+                    pst.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+                    pst.setInt(2,id);
+
+
                     return token;
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -102,10 +112,38 @@ public class BugTrackingDaoImpl implements BugTrackingDao{
     }
 
 
-
     //Sample function to check token access.
     @Override
     public int fetchUsers(String token) {
         return isAuthorized(token);
+    }
+
+    @Override
+    public boolean addUsersFromJson(List<User> users) {
+
+        for(User user:users){
+            String insertUsers = "INSERT INTO USERS (PASSWORD, EMAIL, USERNAME, NAME, ADDRESS, JOIN_DATE, CONTACT_NUMBER, DOB, GENDER, PROFILE_PICTURE_URL, ROLE, ASSIGNED_PROJECTS, LAST_LOGGED_IN_DATETIME) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            try (PreparedStatement ps = conn.prepareStatement(insertUsers)) {
+                ps.setString(1, user.getPassword());
+                ps.setString(2, user.getEmail());
+                ps.setString(3, user.getUsername());
+                ps.setString(4, user.getName());
+                ps.setString(5, user.getAddress());
+                ps.setDate(6, java.sql.Date.valueOf(user.getJoinDate().toString()));
+                ps.setString(7, user.getContactNumber());
+                ps.setDate(8, java.sql.Date.valueOf(user.getDob().toString()));
+                ps.setString(9, user.getGender());
+                ps.setString(10, user.getProfilePictureUrl());
+                ps.setString(11, user.getRole());
+                ps.setInt(12, user.getAssignedProjects());
+                ps.setTimestamp(13, java.sql.Timestamp.valueOf(user.getLastLoggedInDatetime()));
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                return false;
+            }
+
+        }
+        return true;
     }
 }

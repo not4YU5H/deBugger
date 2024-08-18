@@ -1,5 +1,7 @@
 package com.codefury.beans;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class User {
@@ -9,15 +11,15 @@ public class User {
     private String username;
     private String name;
     private String address;
-    private Date joinDate;
+    private LocalDate joinDate;
     private String contactNumber;
-    private Date dob;
+    private LocalDate dob;
     private String gender;
     private Date userCreationTime;
     private String profilePictureUrl;
     private String role;
     private int assignedProjects;
-    private Date lastLoggedInDatetime;
+    private LocalDateTime lastLoggedInDatetime;
 
     // Getters and Setters
     public int getUserId() {
@@ -68,11 +70,11 @@ public class User {
         this.address = address;
     }
 
-    public Date getJoinDate() {
+    public LocalDate getJoinDate() {
         return joinDate;
     }
 
-    public void setJoinDate(Date joinDate) {
+    public void setJoinDate(LocalDate joinDate) {
         this.joinDate = joinDate;
     }
 
@@ -84,11 +86,11 @@ public class User {
         this.contactNumber = contactNumber;
     }
 
-    public Date getDob() {
+    public LocalDate getDob() {
         return dob;
     }
 
-    public void setDob(Date dob) {
+    public void setDob(LocalDate dob) {
         this.dob = dob;
     }
 
@@ -132,11 +134,11 @@ public class User {
         this.assignedProjects = assignedProjects;
     }
 
-    public Date getLastLoggedInDatetime() {
+    public LocalDateTime getLastLoggedInDatetime() {
         return lastLoggedInDatetime;
     }
 
-    public void setLastLoggedInDatetime(Date lastLoggedInDatetime) {
+    public void setLastLoggedInDatetime(LocalDateTime lastLoggedInDatetime) {
         this.lastLoggedInDatetime = lastLoggedInDatetime;
     }
 
