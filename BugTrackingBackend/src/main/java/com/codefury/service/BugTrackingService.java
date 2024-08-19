@@ -1,7 +1,10 @@
 package com.codefury.service;
 
+import com.codefury.beans.Project;
 import com.codefury.beans.User;
-import com.codefury.exception.InvalidTokenException;
+import com.codefury.exception.*;
+
+import java.util.List;
 
 public interface BugTrackingService {
 
@@ -10,4 +13,6 @@ public interface BugTrackingService {
     boolean addUsersFromJson(String filepath);
 
     User fetchUserInfo(String token) throws InvalidTokenException;
+
+    boolean createProject(String token, Project proj, List<Integer> team) throws InvalidTokenException, ManagerMaxProjectException, ProjectStartDateException, TeamMemberException, NoAccessException, UserNotFoundException;
 }
