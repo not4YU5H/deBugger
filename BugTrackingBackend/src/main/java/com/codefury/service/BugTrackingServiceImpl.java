@@ -1,5 +1,6 @@
 package com.codefury.service;
 
+import com.codefury.beans.Bug;
 import com.codefury.beans.Project;
 import com.codefury.beans.User;
 import com.codefury.dao.BugTrackingDao;
@@ -101,6 +102,31 @@ public class BugTrackingServiceImpl implements BugTrackingService{
     @Override
     public List<Project> fetchProjectsManagedByManagerId(String token) throws InvalidTokenException {
         return bugTrackingDao.fetchProjectsManagedByManagerId(token);
+    }
+
+    @Override
+    public Project fetchProjectDetails(String token) throws InvalidTokenException {
+        return bugTrackingDao.fetchProjectDetails(token);
+    }
+
+    @Override
+    public List<String> fetchRolesByTeamMemberId(String token) throws InvalidTokenException {
+        return bugTrackingDao.fetchRolesByTeamMemberId(token);
+    }
+
+    @Override
+    public List<Bug> fetchBugsPerProjectId(String token) throws InvalidTokenException {
+        return bugTrackingDao.fetchBugsPerProjectId(token);
+    }
+
+    @Override
+    public boolean assignBugToDeveloper(String token) throws InvalidTokenException {
+        return bugTrackingDao.assignBugToDeveloper(token);
+    }
+
+    @Override
+    public boolean closeBug(String token) throws InvalidTokenException {
+        return bugTrackingDao.closeBug(token);
     }
 
 

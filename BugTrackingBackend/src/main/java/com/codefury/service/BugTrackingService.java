@@ -22,6 +22,9 @@ public interface BugTrackingService {
 
     Project fetchProjectDetails(String token) throws InvalidTokenException;
 
+    List<String> fetchRolesByTeamMemberId(String token) throws InvalidTokenException;
+
+
     List<Bug> fetchBugsPerProjectId(String token) throws InvalidTokenException;
 
     boolean assignBugToDeveloper(String token) throws InvalidTokenException;

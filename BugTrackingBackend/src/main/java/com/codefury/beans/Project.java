@@ -1,7 +1,7 @@
 package com.codefury.beans;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Project {
     private int projectId;
@@ -11,7 +11,7 @@ public class Project {
     private String clientName;
     private BigDecimal budget;
     private String poc;
-    private Date startDate;
+    private LocalDate startDate;
     private int teamId; //Only pass Team ID for easy transfer of data to DB
     private String status;
 
@@ -72,11 +72,11 @@ public class Project {
         this.poc = poc;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 

@@ -2,6 +2,7 @@ package com.codefury.dao;
 
 import com.codefury.beans.Project;
 import com.codefury.beans.User;
+import com.codefury.beans.Bug;
 import com.codefury.exception.InvalidTokenException;
 
 import java.sql.*;
@@ -191,18 +192,12 @@ public class BugTrackingDaoImpl implements BugTrackingDao{
 
     @Override
     public List<Project> fetchProjectsManagedByManagerId(String token) throws InvalidTokenException {
-        // Call isAuthorized() once and store its results
-        List<Object> authResult = isAuthorized(token);
-        int authLevel = (int) authResult.get(0);
-        int managerId = (int) authResult.get(1);
+        int auth = (int) isAuthorized(token).get(0);
+        int managerId = (int) isAuthorized(token).get(1);
 
-        // Check if the user has Admin level access
-        if (authLevel == 0) {
+        if (auth == 0) {  // Admin level access
             List<Project> projects = new ArrayList<>();
-            String query = "SELECT p.PROJECTID, p.NAME, p.DESCRIPTION, p.START_DATE, p.STATUS " +
-                    "FROM PROJECT p " +
-                    "JOIN TEAMS t ON p.TEAM_ID = t.TEAMID " +
-                    "WHERE t.MANAGER_ID = ?;";
+            String query = "SELECT * FROM PROJECT WHERE TEAM_ID IN (SELECT TEAMID FROM TEAMS WHERE MANAGER_ID=?)";
 
             try (PreparedStatement pst = conn.prepareStatement(query)) {
                 pst.setInt(1, managerId);
@@ -213,11 +208,7 @@ public class BugTrackingDaoImpl implements BugTrackingDao{
                     project.setProjectId(rs.getInt("PROJECTID"));
                     project.setName(rs.getString("NAME"));
                     project.setDescription(rs.getString("DESCRIPTION"));
-                    // Convert java.sql.Date to java.util.Date and set to project
-                    java.sql.Date sqlDate = rs.getDate("START_DATE");
-                    Date utilDate = new Date(sqlDate.getTime());
-                    project.setStartDate(utilDate);
-
+                    project.setStartDate(rs.getDate("START_DATE").toLocalDate());
                     project.setStatus(rs.getString("STATUS"));
                     projects.add(project);
                 }
@@ -228,6 +219,146 @@ public class BugTrackingDaoImpl implements BugTrackingDao{
         }
         return null;
     }
+
+
+    @Override
+    public Project fetchProjectDetails(String token) throws InvalidTokenException {
+        List<Object> authResult = isAuthorized(token);
+        int authLevel = (int) authResult.get(0);
+        int userId = (int) authResult.get(1);
+
+        if (authLevel == 0) { // Assuming Admin has access
+            String query = "SELECT P.NAME, P.START_DATE, U.NAME AS MANAGER_NAME FROM PROJECT P JOIN TEAMS T ON P.TEAM_ID = T.TEAMID JOIN USERS U ON T.MANAGER_ID = U.USERID WHERE T.MANAGER_ID = ?";
+            try (PreparedStatement pst = conn.prepareStatement(query)) {
+                pst.setInt(1, userId);
+                ResultSet rs = pst.executeQuery();
+                if (rs.next()) {
+                    Project project = new Project();
+                    //project.setProjectId(rs.getInt("PROJECTID"));
+                    project.setName(rs.getString("NAME"));
+                    project.setStartDate(rs.getDate("START_DATE").toLocalDate());
+                    //ALSO DISPLAY MANAGER NAME
+                   // project.setStatus(rs.getString("STATUS"));
+                    return project;
+                }
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<String> fetchRolesByTeamMemberId(String token) throws InvalidTokenException {
+        List<Object> authResult = isAuthorized(token);
+        int authLevel = (int) authResult.get(0);
+        int userId = (int) authResult.get(1);
+
+        if (authLevel == 0) { // Assuming only Admin can fetch roles by team member ID
+            List<String> roles = new ArrayList<>();
+            String query = "SELECT t.NAME AS TEAM_NAME, u.NAME AS USER_NAME, u.ROLE " +
+                    "FROM TEAMS t " +
+                    "JOIN USERS u ON t.TEAMID = u.ASSIGNED_PROJECTS " +
+                    "WHERE t.MANAGER_ID = ?;";
+
+            try (PreparedStatement pst = conn.prepareStatement(query)) {
+                pst.setInt(1, userId);
+                ResultSet rs = pst.executeQuery();
+
+                while (rs.next()) {
+                    String roleInfo = "Team: " + rs.getString("TEAM_NAME") +
+                            ", Member: " + rs.getString("USER_NAME") +
+                            ", Role: " + rs.getString("ROLE");
+                    roles.add(roleInfo);
+                }
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+            return roles;
+        }
+        return null;
+    }
+
+
+    @Override
+    public List<Bug> fetchBugsPerProjectId(String token) throws InvalidTokenException {
+        List<Object> authResult = isAuthorized(token);
+        int authLevel = (int) authResult.get(0);
+        int userId = (int) authResult.get(1);
+
+        if (authLevel == 0) { // Assuming Admin has access
+            List<Bug> bugs = new ArrayList<>();
+            String query = "SELECT * FROM BUGS WHERE PROJECT_ID = (SELECT PROJECTID FROM TEAMS WHERE MANAGER_ID = ?)";
+            try (PreparedStatement pst = conn.prepareStatement(query)) {
+                pst.setInt(1, userId);
+                ResultSet rs = pst.executeQuery();
+                while (rs.next()) {
+                    Bug bug = new Bug();
+                    bug.setBugId(rs.getInt("BUG_ID"));
+                    bug.setProjectId(rs.getInt("PROJECT_ID"));
+                    bug.setBugName(rs.getString("BUG_NAME"));
+                    bug.setBugDescription(rs.getString("BUG_DESCRIPTION"));
+                    bug.setCreatedBy(rs.getInt("CREATEDBY"));
+                    bug.setCreatedOn(rs.getTimestamp("CREATEDON").toLocalDateTime());
+                    bug.setImageUrls(rs.getString("IMAGE_URLS"));
+                    bug.setStatus(rs.getString("STATUS"));
+                    bug.setSecurityLevel(rs.getString("SECURITY_LEVEL"));
+                    bugs.add(bug);
+                }
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+            return bugs;
+        }
+        return null;
+    }
+
+    @Override
+    public boolean assignBugToDeveloper(String token) throws InvalidTokenException {
+        List<Object> authResult = isAuthorized(token);
+        int authLevel = (int) authResult.get(0);
+        int userId = (int) authResult.get(1);
+
+        if (authLevel == 0) { // Assuming Admin has access
+            // Assuming input will come from somewhere, for example, a method parameter
+            int bugId = 1; // Placeholder
+            int developerId = 2; // Placeholder
+
+            String query = "UPDATE BUGS SET CREATEDBY = ? WHERE BUG_ID = ?";
+            try (PreparedStatement pst = conn.prepareStatement(query)) {
+                pst.setInt(1, developerId);
+                pst.setInt(2, bugId);
+                int rowsAffected = pst.executeUpdate();
+                return rowsAffected > 0;
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean closeBug(String token) throws InvalidTokenException {
+        List<Object> authResult = isAuthorized(token);
+        int authLevel = (int) authResult.get(0);
+        int userId = (int) authResult.get(1);
+
+        if (authLevel == 0) { // Assuming Admin has access
+            // Assuming input will come from somewhere, for example, a method parameter
+            int bugId = 1; // Placeholder
+
+            String query = "UPDATE BUGS SET STATUS = 'Closed' WHERE BUG_ID = ?";
+            try (PreparedStatement pst = conn.prepareStatement(query)) {
+                pst.setInt(1, bugId);
+                int rowsAffected = pst.executeUpdate();
+                return rowsAffected > 0;
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        return false;
+    }
+
 
 
 
