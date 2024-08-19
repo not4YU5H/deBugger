@@ -156,18 +156,23 @@ public class BugTrackingDaoImpl implements BugTrackingDao{
         return true;
     }
 
-
     @Override
-    public List<Project> fetchProjectInfoByUserId(int userId) {
+    public List<Project> fetchProjectInfoByUserId(String token) throws InvalidTokenException {
+        int auth = (int) isAuthorized(token).get(0);
+        int id = (int) isAuthorized(token).get(1);
         List<Project> projects = new ArrayList<>();
         String query = "SELECT p.* " +
                 "FROM PROJECT p " +
-                "JOIN USER_PROJECT up ON p.PROJECTID = up.PROJECT_ID " +
-                "WHERE up.USER_ID = ?;";
-        try {
-            PreparedStatement pst = conn.prepareStatement(query);
-            pst.setInt(1, userId);
+                "WHERE p.TEAM_ID = (" +
+                "    SELECT t.TEAMID " +
+                "    FROM TEAMS t " +
+                "    WHERE t.MANAGER_ID = ? OR FIND_IN_SET(?, t.TEAM_MEMBERS)" +
+                ");";
+        try (PreparedStatement pst = conn.prepareStatement(query)) {
+            pst.setInt(1, id);
+            pst.setInt(2, id);
             ResultSet rs = pst.executeQuery();
+
             while (rs.next()) {
                 Project project = new Project();
                 project.setProjectId(rs.getInt("PROJECTID"));
@@ -180,13 +185,15 @@ public class BugTrackingDaoImpl implements BugTrackingDao{
                 project.setStartDate(rs.getDate("START_DATE"));
                 project.setTeamId(rs.getInt("TEAM_ID"));
                 project.setStatus(rs.getString("STATUS"));
+
                 projects.add(project);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error fetching projects for user ID: " + userId, e);
+            throw new RuntimeException("Failed to fetch projects for user ID: " + id, e);
         }
         return projects;
     }
+
 
 
     @Override

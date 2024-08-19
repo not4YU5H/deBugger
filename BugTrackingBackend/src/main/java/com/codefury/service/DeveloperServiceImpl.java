@@ -34,8 +34,8 @@ public class DeveloperServiceImpl implements DeveloperService{
     }
 
     @Override
-    public List<Project> fetchProjectDetailsByUser(int userId) throws NoProjectsAssignedException {
-        return bugTrackingDao.fetchProjectInfoByUserId(userId);
+    public List<Project> fetchProjectDetailsByUser(String token) throws NoProjectsAssignedException,InvalidTokenException {
+        return bugTrackingDao.fetchProjectInfoByUserId(token);
     }
 
     @Override

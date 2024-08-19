@@ -15,7 +15,7 @@ public interface BugTrackingDao {
 
     User fetchUserInfo(String token) throws InvalidTokenException;
 
-    List<Project> fetchProjectInfoByUserId(int userId);
+    List<Project> fetchProjectInfoByUserId(String token) throws InvalidTokenException;
 
     boolean markGivenBugForClose(int bugId) throws BugNotFoundException,RuntimeException;
 }
