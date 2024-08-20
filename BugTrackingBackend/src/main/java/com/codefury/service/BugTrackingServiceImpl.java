@@ -1,11 +1,10 @@
 package com.codefury.service;
 
-import com.codefury.beans.Project;
 import com.codefury.beans.User;
 import com.codefury.dao.BugTrackingDao;
 import com.codefury.dao.StorageFactory;
 //jar files have tp be manually downloaded from the internet
-import com.codefury.exception.*;
+import com.codefury.exception.InvalidTokenException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.BufferedReader;
@@ -97,13 +96,6 @@ public class BugTrackingServiceImpl implements BugTrackingService{
 
         return bugTrackingDao.fetchUserInfo(token);
     }
-
-    @Override
-    public boolean createProject(String token, Project proj, List<Integer> team) throws InvalidTokenException, ManagerMaxProjectException, ProjectStartDateException, TeamMemberException, NoAccessException, UserNotFoundException {
-        return bugTrackingDao.createProject(token,proj,team);
-    }
-
-
 
 
 }

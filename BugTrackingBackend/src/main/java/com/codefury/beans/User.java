@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 public class User {
-    private int userId;
+    private static int userId;
     private String password;
     private String email;
     private String username;
@@ -22,7 +22,7 @@ public class User {
     private LocalDateTime lastLoggedInDatetime;
 
     // Getters and Setters
-    public int getUserId() {
+    public static int getUserId() {
         return userId;
     }
 
