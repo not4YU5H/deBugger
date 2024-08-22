@@ -9,6 +9,16 @@ public class Bug {
     private String bugDescription;
     private int createdBy;//UserId
     private Date createdOn;
+    private int assigned_to;
+
+    public int getAssigned_to() {
+        return assigned_to;
+    }
+
+    public void setAssigned_to(int assigned_to) {
+        this.assigned_to = assigned_to;
+    }
+
     private String imageUrls;
     private String status;
     private String securityLevel;
@@ -95,6 +105,7 @@ public class Bug {
                 ", bugDescription='" + bugDescription + '\'' +
                 ", createdBy=" + createdBy +
                 ", createdOn=" + createdOn +
+                ", assigned_to=" + assigned_to +
                 ", imageUrls='" + imageUrls + '\'' +
                 ", status='" + status + '\'' +
                 ", securityLevel='" + securityLevel + '\'' +

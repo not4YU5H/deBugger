@@ -12,17 +12,18 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class BugTrackingDaoImpl implements BugTrackingDao {
     private Connection conn;//Connection to DB
-    private EncryptionUtil encryption;//Holds the encryption values
+    private EncryptionUtil security;//Holds the encryption values
     private HashMap<String, LocalDateTime> tokenvalidity;//Holds the token and validity statements
     //The hashmap is stored in ram so that if the application shutsdown new tokens are generated.
 
     public BugTrackingDaoImpl() {
         this.conn = DBUtil.getMyConnection();
-        this.encryption = new EncryptionUtil();
+        this.security = new EncryptionUtil();
         this.tokenvalidity = new HashMap<>();
     }
 
@@ -48,6 +49,8 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
             }
         }
         if (!tokenvalidity.containsKey(token)) {
+            security.log("Tried Signing in with expired/illegal token "+LocalDateTime.now().toString(), Level.WARNING);
+
             throw new InvalidTokenException("Invalid Token");
         }
 
@@ -57,8 +60,8 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
 
         try {
             //Splitting the decrypted string back to different strings
-            auth = encryption.decrypt(token).split(",")[2];
-            id = Integer.parseInt(encryption.decrypt(token).split(",")[0]);
+            auth = security.decrypt(token).split(",")[2];
+            id = Integer.parseInt(security.decrypt(token).split(",")[0]);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -98,7 +101,7 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
                     int id = rs.getInt("USERID");
                     //Localdate.now() is used to create more randomness in the string to be encrypted. It will be almost impossible to guess the server time to the millisecond
                     String tokenization = id + "," + rs.getString("NAME") + "," + rs.getString("ROLE") + "," + LocalDateTime.now();
-                    String token = encryption.encrypt(tokenization);
+                    String token = security.encrypt(tokenization);
                     tokenvalidity.put(token, LocalDateTime.now());
 
                     //After login we have to update last logged in.
@@ -112,6 +115,8 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
                     throw new RuntimeException(e);
                 }
             } else {
+                security.log("Tried Signing in with wrong username/password username = "+username+" "+LocalDateTime.now().toString(), Level.SEVERE);
+
                 return null;
             }
 
@@ -184,6 +189,8 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
 
         }
 
+
+        security.log("Tried Signing into ID: "+id+" Failed with Token "+LocalDateTime.now().toString(), Level.WARNING);
         return null;
     }
 
@@ -205,10 +212,13 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
         List creds = isAuthorized(token);
         //TO check if he is a manager or not
         int auth = (int) creds.get(0);
+        int id = (int) creds.get(1);
+
         if (auth != 0) { //To check if He has admin access
+            security.log("Tried Accessing create project method with: "+id+" Failed with Token "+LocalDateTime.now().toString(), Level.SEVERE);
+
             throw new NoAccessException("You dont have access to the Feature");
         }
-        int id = (int) creds.get(1);
         try {
             //Check if he has more than 4 projects then raise exception
             PreparedStatement pst = conn.prepareStatement("select * from USERS where USERID=?;");
