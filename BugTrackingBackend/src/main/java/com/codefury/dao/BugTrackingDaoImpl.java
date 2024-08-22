@@ -207,6 +207,33 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
         return false;
     }
 
+    private List<User>getUsersfromteam(List<Integer> team) throws UserNotFoundException {
+        List<User> teammembers = new ArrayList<>();
+        for (Integer member : team) {
+            try {
+                PreparedStatement pst = conn.prepareStatement("select * from USERS where USERID=?;");
+                pst.setInt(1, member);
+                ResultSet rs = pst.executeQuery();
+                User user = new User();
+                if (rs.next()) {
+                    user.setUsername(rs.getString("USERNAME"));
+                    user.setName(rs.getString("NAME"));
+                    user.setEmail(rs.getString("EMAIL"));
+                    user.setLastLoggedInDatetime(rs.getTimestamp("LAST_LOGGED_IN_DATETIME").toLocalDateTime());
+                    user.setRole(rs.getString("ROLE"));
+                    user.setProfilePictureUrl(rs.getString("PROFILE_PICTURE_URL"));
+                    user.setAssignedProjects(rs.getInt("ASSIGNED_PROJECTS"));
+                }
+                teammembers.add(user);
+
+            } catch (SQLException e) {
+                throw new UserNotFoundException("The User does not Exists");
+
+            }
+        }
+        return teammembers;
+    }
+
     @Override
     public boolean createProject(String token, Project proj, List<Integer> team) throws InvalidTokenException, ManagerMaxProjectException, ProjectStartDateException, NoAccessException, TeamMemberException, UserNotFoundException {
         List creds = isAuthorized(token);
@@ -241,30 +268,8 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
         }
 
         //create list of user objects of all the team member ids.
-        List<User> teammembers = new ArrayList<>();
+        List<User> teammembers = getUsersfromteam(team);
 
-        for (Integer member : team) {
-            try {
-                PreparedStatement pst = conn.prepareStatement("select * from USERS where USERID=?;");
-                pst.setInt(1, member);
-                ResultSet rs = pst.executeQuery();
-                User user = new User();
-                if (rs.next()) {
-                    user.setUsername(rs.getString("USERNAME"));
-                    user.setName(rs.getString("NAME"));
-                    user.setEmail(rs.getString("EMAIL"));
-                    user.setLastLoggedInDatetime(rs.getTimestamp("LAST_LOGGED_IN_DATETIME").toLocalDateTime());
-                    user.setRole(rs.getString("ROLE"));
-                    user.setProfilePictureUrl(rs.getString("PROFILE_PICTURE_URL"));
-                    user.setAssignedProjects(rs.getInt("ASSIGNED_PROJECTS"));
-                }
-                teammembers.add(user);
-
-            } catch (SQLException e) {
-                throw new UserNotFoundException("The User does not Exists");
-
-            }
-        }
 
         //Check if Developer assigned has a project already if then raise exception.
         //Check if tester assigned has 2 projects already if then raise exception.
