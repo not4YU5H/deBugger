@@ -15,9 +15,9 @@ public class DBUtil {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-            String url = "jdbc:mysql://54.197.170.44:3306/codefury";
+            String url = "jdbc:mysql://localhost:3306/codefury";
             String user = "root";
-            String password = "codefury";
+            String password = "samgeorge";
 
             //step 2
             try {

@@ -12,17 +12,18 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class BugTrackingDaoImpl implements BugTrackingDao {
     private Connection conn;//Connection to DB
-    private EncryptionUtil encryption;//Holds the encryption values
+    private EncryptionUtil security;//Holds the encryption values
     private HashMap<String, LocalDateTime> tokenvalidity;//Holds the token and validity statements
     //The hashmap is stored in ram so that if the application shutsdown new tokens are generated.
 
     public BugTrackingDaoImpl() {
         this.conn = DBUtil.getMyConnection();
-        this.encryption = new EncryptionUtil();
+        this.security = new EncryptionUtil();
         this.tokenvalidity = new HashMap<>();
     }
 
@@ -48,6 +49,8 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
             }
         }
         if (!tokenvalidity.containsKey(token)) {
+            security.log("Tried Signing in with expired/illegal token "+LocalDateTime.now().toString(), Level.WARNING);
+
             throw new InvalidTokenException("Invalid Token");
         }
 
@@ -57,8 +60,8 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
 
         try {
             //Splitting the decrypted string back to different strings
-            auth = encryption.decrypt(token).split(",")[2];
-            id = Integer.parseInt(encryption.decrypt(token).split(",")[0]);
+            auth = security.decrypt(token).split(",")[2];
+            id = Integer.parseInt(security.decrypt(token).split(",")[0]);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -98,7 +101,7 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
                     int id = rs.getInt("USERID");
                     //Localdate.now() is used to create more randomness in the string to be encrypted. It will be almost impossible to guess the server time to the millisecond
                     String tokenization = id + "," + rs.getString("NAME") + "," + rs.getString("ROLE") + "," + LocalDateTime.now();
-                    String token = encryption.encrypt(tokenization);
+                    String token = security.encrypt(tokenization);
                     tokenvalidity.put(token, LocalDateTime.now());
 
                     //After login we have to update last logged in.
@@ -112,6 +115,8 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
                     throw new RuntimeException(e);
                 }
             } else {
+                security.log("Tried Signing in with wrong username/password username = "+username+" "+LocalDateTime.now().toString(), Level.SEVERE);
+
                 return null;
             }
 
@@ -184,6 +189,8 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
 
         }
 
+
+        security.log("Tried Signing into ID: "+id+" Failed with Token "+LocalDateTime.now().toString(), Level.WARNING);
         return null;
     }
 
@@ -200,39 +207,8 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
         return false;
     }
 
-    @Override
-    public boolean createProject(String token, Project proj, List<Integer> team) throws InvalidTokenException, ManagerMaxProjectException, ProjectStartDateException, NoAccessException, TeamMemberException, UserNotFoundException {
-        List creds = isAuthorized(token);
-        //TO check if he is a manager or not
-        int auth = (int) creds.get(0);
-        if (auth != 0) { //To check if He has admin access
-            throw new NoAccessException("You dont have access to the Feature");
-        }
-        int id = (int) creds.get(1);
-        try {
-            //Check if he has more than 4 projects then raise exception
-            PreparedStatement pst = conn.prepareStatement("select * from USERS where USERID=?;");
-            pst.setInt(1, id);
-            ResultSet rs = pst.executeQuery();
-            if (rs.next()) {
-                int assigned = rs.getInt("ASSIGNED_PROJECTS");
-                if (assigned >= 4) {
-                    throw new ManagerMaxProjectException("Manager Can only create 4 Projects");
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-
-        //Check if the Startdate is two days from current date
-        if (!proj.getStartDate().isAfter(LocalDate.now().plusDays(2))) {
-            throw new ProjectStartDateException("Project Date should be atleast 2 days in future");
-        }
-
-        //create list of user objects of all the team member ids.
+    private List<User>getUsersfromteam(List<Integer> team) throws UserNotFoundException {
         List<User> teammembers = new ArrayList<>();
-
         for (Integer member : team) {
             try {
                 PreparedStatement pst = conn.prepareStatement("select * from USERS where USERID=?;");
@@ -255,30 +231,14 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
 
             }
         }
+        return teammembers;
+    }
 
-        //Check if Developer assigned has a project already if then raise exception.
-        //Check if tester assigned has 2 projects already if then raise exception.
-
-        //By default in front while fetching and showing available devlopers and testers
-        // we can always check this. and only show once that match the criteria
-        for (User user : teammembers) {
-            if (user.getRole().equals("Developer") && user.getAssignedProjects() >= 1) {
-                throw new TeamMemberException(user.getUsername() + " Has Already been allotted a project");
-            } else if (user.getRole().equals("Tester") && user.getAssignedProjects() >= 2) {
-                throw new TeamMemberException(user.getUsername() + " Has Already been allotted to 2 projects");
-            }
-        }
-
-        //Team object has to be created:
-        String teamname = proj.getName() + "001";
-        Team team1 = new Team(1, teamname, teammembers, 1, 1, id);
-
-        //Insert team into table
-
+    private int saveTeam(Team team1,List<Integer> teammembers){
         int teamid = -1;
         try {
             PreparedStatement ptst = conn.prepareStatement("INSERT INTO TEAMS (NAME, TEAM_MEMBERS, PROJECTS_COMPLETED, PROJECTS_ASSIGNED, MANAGER_ID) VALUES (?, ?, ?, ?, ?)");
-            String teamMembersStr = team.stream()
+            String teamMembersStr = teammembers.stream()
                     .map(String::valueOf)
                     .collect(Collectors.joining(",")); // Converts list to comma-separated string
 
@@ -302,6 +262,66 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return teamid;
+    }
+
+    @Override
+    public boolean createProject(String token, Project proj, List<Integer> team) throws InvalidTokenException, ManagerMaxProjectException, ProjectStartDateException, NoAccessException, TeamMemberException, UserNotFoundException {
+        List creds = isAuthorized(token);
+        //TO check if he is a manager or not
+        int auth = (int) creds.get(0);
+        int id = (int) creds.get(1);
+
+        if (auth != 0) { //To check if He has admin access
+            security.log("Tried Accessing create project method with: "+id+" Failed with Token "+LocalDateTime.now().toString(), Level.SEVERE);
+
+            throw new NoAccessException("You dont have access to the Feature");
+        }
+        try {
+            //Check if he has more than 4 projects then raise exception
+            PreparedStatement pst = conn.prepareStatement("select * from USERS where USERID=?;");
+            pst.setInt(1, id);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                int assigned = rs.getInt("ASSIGNED_PROJECTS");
+                if (assigned >= 4) {
+                    throw new ManagerMaxProjectException("Manager Can only create 4 Projects");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        //Check if the Startdate is two days from current date
+        if (!proj.getStartDate().isAfter(LocalDate.now().plusDays(2))) {
+            throw new ProjectStartDateException("Project Date should be atleast 2 days in future");
+        }
+
+        //create list of user objects of all the team member ids.
+        List<User> teammembers = getUsersfromteam(team);
+
+
+        //Check if Developer assigned has a project already if then raise exception.
+        //Check if tester assigned has 2 projects already if then raise exception.
+
+        //By default in front while fetching and showing available devlopers and testers
+        // we can always check this. and only show once that match the criteria
+        for (User user : teammembers) {
+            if (user.getRole().equals("Developer") && user.getAssignedProjects() >= 1) {
+                throw new TeamMemberException(user.getUsername() + " Has Already been allotted a project");
+            } else if (user.getRole().equals("Tester") && user.getAssignedProjects() >= 2) {
+                throw new TeamMemberException(user.getUsername() + " Has Already been allotted to 2 projects");
+            }
+        }
+
+        //Team object has to be created:
+        String teamname = proj.getName() + "001";
+        Team teamobj = new Team(1, teamname, teammembers, 1, 1, id);
+
+        //Insert team into table
+        //And assign the team id to proj object
+        int teamid = saveTeam(teamobj,team);
         proj.setTeamId(teamid);
 
         try {
@@ -331,5 +351,6 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
         return false;
 
     }
+
 }
 

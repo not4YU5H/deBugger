@@ -31,6 +31,7 @@ public class BugTrackingTest {
         //Sample login attempt
         String token = bugTrackingService.login("george@1234","password123");
 
+        System.out.println(token);
 
 
         //fetching user information
