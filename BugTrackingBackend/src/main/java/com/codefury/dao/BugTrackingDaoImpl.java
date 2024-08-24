@@ -1,5 +1,6 @@
 package com.codefury.dao;
 
+import com.codefury.beans.Bug;
 import com.codefury.beans.Project;
 import com.codefury.beans.Team;
 import com.codefury.beans.User;
@@ -351,6 +352,216 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
         return false;
 
     }
+
+
+    //Sakshi code
+
+
+    @Override
+    public List<Project> fetchProjectsManagedByManagerId(String token) throws InvalidTokenException, NoAccessException, NoDataFoundException {
+        int auth = (int) isAuthorized(token).get(0);
+        int managerId = (int) isAuthorized(token).get(1);
+
+        if(auth!=0){
+            throw new NoAccessException("You are not Authorized to Access");
+        }
+
+        if (auth == 0) {  // Admin level access
+            List<Project> projects = new ArrayList<>();
+            String query = "SELECT * FROM PROJECT WHERE TEAM_ID IN (SELECT TEAMID FROM TEAMS WHERE MANAGER_ID=?)";
+
+            try (PreparedStatement pst = conn.prepareStatement(query)) {
+                pst.setInt(1, managerId);
+                ResultSet rs = pst.executeQuery();
+
+                while (rs.next()) {
+                    Project project = new Project();
+                    project.setProjectId(rs.getInt("PROJECTID"));
+                    project.setName(rs.getString("NAME"));
+                    project.setDescription(rs.getString("DESCRIPTION"));
+                    project.setStartDate(rs.getDate("START_DATE").toLocalDate());
+                    project.setStatus(rs.getString("STATUS"));
+                    projects.add(project);
+                }
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+            if(projects.size()==0){
+                throw new NoDataFoundException("No Data Available");
+
+            }
+            return projects;
+        }
+
+        return null;
+    }
+
+
+    @Override
+    public Project fetchProjectDetails(String token) throws InvalidTokenException, NoAccessException, NoDataFoundException {
+        List<Object> authResult = isAuthorized(token);
+        int authLevel = (int) authResult.get(0);
+        int userId = (int) authResult.get(1);
+        if(authLevel!=0){
+            throw new NoAccessException("You are not Authorized to Access");
+        }
+        if (authLevel == 0) { // Assuming Admin has access
+            String query = "SELECT P.NAME, P.START_DATE, U.NAME AS MANAGER_NAME FROM PROJECT P JOIN TEAMS T ON P.TEAM_ID = T.TEAMID JOIN USERS U ON T.MANAGER_ID = U.USERID WHERE T.MANAGER_ID = ?";
+            try (PreparedStatement pst = conn.prepareStatement(query)) {
+                pst.setInt(1, userId);
+                ResultSet rs = pst.executeQuery();
+                if (rs.next()) {
+                    Project project = new Project();
+                    //project.setProjectId(rs.getInt("PROJECTID"));
+                    project.setName(rs.getString("NAME"));
+                    project.setStartDate(rs.getDate("START_DATE").toLocalDate());
+                    //ALSO DISPLAY MANAGER NAME
+                    // project.setStatus(rs.getString("STATUS"));
+                    return project;
+                }else{
+                        throw new NoDataFoundException("No Data Available");
+
+                }
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Team fetchRolesByTeamMemberId(String token) throws InvalidTokenException, NoAccessException, NoDataFoundException {
+        List<Object> authResult = isAuthorized(token);
+        int authLevel = (int) authResult.get(0);
+        int userId = (int) authResult.get(1);
+
+        if(authLevel!=0){
+            throw new NoAccessException("You are not Authorized to Access");
+        }
+        if (authLevel == 0) { // Assuming only Admin can fetch roles by team member ID
+            List<User> users = new ArrayList<>();
+            Team team = new Team();
+            String query = "SELECT t.TEAMID as TEAMID, t.NAME AS TEAM_NAME, u.USERID as USERID, u.NAME AS USER_NAME, u.ROLE " +
+                    "FROM TEAMS t " +
+                    "JOIN USERS u ON t.TEAMID = u.ASSIGNED_PROJECTS " +
+                    "WHERE t.MANAGER_ID = ?;";
+
+            try (PreparedStatement pst = conn.prepareStatement(query)) {
+                pst.setInt(1, userId);
+                ResultSet rs = pst.executeQuery();
+                while (rs.next()) {
+                    User user = new User();
+                    team.setTeamId(rs.getInt("TEAMID"));
+                    team.setName(rs.getString("TEAM_NAME"));
+                    user.setName(rs.getString("USERID"));
+                    user.setUsername(rs.getString("USER_NAME"));
+                    user.setRole(rs.getString("ROLE"));
+                    users.add(user);
+
+                }
+                team.setTeamMembers(users);
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+            if(team.getTeamMembers().isEmpty()){
+                throw new NoDataFoundException("No Data Available");
+            }
+            return team;
+        }
+        return null;
+    }
+
+
+    @Override
+    public List<Bug> fetchBugsPerProjectId(String token) throws InvalidTokenException, NoAccessException, NoDataFoundException {
+        List<Object> authResult = isAuthorized(token);
+        int authLevel = (int) authResult.get(0);
+        int userId = (int) authResult.get(1);
+        if(authLevel!=0){
+            throw new NoAccessException("You are not Authorized to Access");
+        }else { // Assuming Admin has access
+            List<Bug> bugs = new ArrayList<>();
+            String query = "select * from bugs,(select projectid,manager_id,teamid,team_members  from project,teams where project.team_id=teams.teamid and manager_id=?) as t1 where t1.projectid=bugs.project_id;";
+            try (PreparedStatement pst = conn.prepareStatement(query)) {
+                pst.setInt(1, userId);
+                ResultSet rs = pst.executeQuery();
+                while (rs.next()) {
+
+                    Bug bug = new Bug();
+                    bug.setBugId(rs.getInt("BUG_ID"));
+                    bug.setProjectId(rs.getInt("PROJECT_ID"));
+                    bug.setBugName(rs.getString("BUG_NAME"));
+                    bug.setBugDescription(rs.getString("BUG_DESCRIPTION"));
+                    bug.setCreatedBy(rs.getInt("CREATEDBY"));
+                    bug.setCreatedOn(rs.getTimestamp("CREATEDON").toLocalDateTime());
+                    bug.setImageUrls(rs.getString("IMAGE_URLS"));
+                    bug.setStatus(rs.getString("STATUS"));
+                    bug.setSecurityLevel(rs.getString("SECURITY_LEVEL"));
+                    bugs.add(bug);
+                }
+            } catch (SQLException e) {
+                System.out.println(e.getMessage()+"jello");
+            }
+            if(bugs.size()==0){
+                throw new NoDataFoundException("No Data Available");
+            }
+            return bugs;
+        }
+
+    }
+
+    @Override
+    public boolean assignBugToDeveloper(String token,int bugId,int developerId) throws InvalidTokenException, NoAccessException {
+        List<Object> authResult = isAuthorized(token);
+        int authLevel = (int) authResult.get(0);
+        int userId = (int) authResult.get(1);
+        if(authLevel!=0){
+            throw new NoAccessException("You are not Authorized to Access");
+        }
+
+        if (authLevel == 0) { // Assuming Admin has access
+            // Assuming input will come from somewhere, for example, a method parameter
+
+            String query = "UPDATE BUGS SET ASSIGNED_TO = ? WHERE BUG_ID = ?";
+            try (PreparedStatement pst = conn.prepareStatement(query)) {
+                pst.setInt(1, developerId);
+                pst.setInt(2, bugId);
+                int rowsAffected = pst.executeUpdate();
+                return rowsAffected > 0;
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean closeBug(String token) throws InvalidTokenException, NoAccessException {
+        List<Object> authResult = isAuthorized(token);
+        int authLevel = (int) authResult.get(0);
+        int userId = (int) authResult.get(1);
+
+        if(authLevel!=0){
+            throw new NoAccessException("You are not Authorized to Access");
+        }
+        if (authLevel == 0) { // Assuming Admin has access
+            // Assuming input will come from somewhere, for example, a method parameter
+            int bugId = 1; // Placeholder
+
+            String query = "UPDATE BUGS SET STATUS = 'Closed' WHERE BUG_ID = ?";
+            try (PreparedStatement pst = conn.prepareStatement(query)) {
+                pst.setInt(1, bugId);
+                int rowsAffected = pst.executeUpdate();
+                return rowsAffected > 0;
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        return false;
+    }
+
+
+
 
 }
 

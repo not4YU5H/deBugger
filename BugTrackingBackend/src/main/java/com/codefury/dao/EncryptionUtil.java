@@ -91,7 +91,6 @@ public class EncryptionUtil {
     }
 
     public void log(String loginfo,Level severity) {
-
         logger.log(severity, loginfo);
 
     }

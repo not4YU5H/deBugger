@@ -31,7 +31,10 @@ public class Project {
 
     }
 
-    public Project(int i, String name, String desc, String stakeholders, String clientName, Double budget, String poc, LocalDate startDate, int teamid, String status) {
+
+
+    public Project() {
+
     }
 
     // Getters and Setters
