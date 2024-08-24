@@ -24,8 +24,7 @@ public class BugTrackingTest {
             boolean status = bugTrackingService.addUsersFromJson(filepath);
             System.out.println(status);
         }
-        
-        
+
 
         //Authentication and Authorization points
         //Sample login attempt
