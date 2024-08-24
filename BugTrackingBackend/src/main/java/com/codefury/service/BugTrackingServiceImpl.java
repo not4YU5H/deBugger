@@ -2,7 +2,6 @@ package com.codefury.service;
 
 import com.codefury.beans.Bug;
 import com.codefury.beans.Project;
-import com.codefury.beans.Team;
 import com.codefury.beans.User;
 import com.codefury.dao.BugTrackingDao;
 import com.codefury.dao.StorageFactory;
@@ -13,6 +12,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -105,40 +105,29 @@ public class BugTrackingServiceImpl implements BugTrackingService{
         return bugTrackingDao.createProject(token,proj,team);
     }
 
-
-    //Sakshi code
-
-    public List<Project> fetchProjectsManagedByManagerId(String token) throws InvalidTokenException, NoAccessException, NoDataFoundException {
-
-        return bugTrackingDao.fetchProjectsManagedByManagerId(token);
-    }
+    //-----------------------------------------------------------------------------------------
+    //TESTER FUNCTIONS
+    //-----------------------------------------------------------------------------------------
 
     @Override
-    public Project fetchProjectDetails(String token) throws InvalidTokenException, NoAccessException, NoDataFoundException {
+    public List<Project> fetchProjectDetails(String token) throws InvalidTokenException {
         return bugTrackingDao.fetchProjectDetails(token);
     }
 
     @Override
-    public Team fetchRolesByTeamMemberId(String token) throws InvalidTokenException, NoAccessException, NoDataFoundException {
-        return bugTrackingDao.fetchRolesByTeamMemberId(token);
+    public List<Project> fetchAssignedProjectList(String token) throws InvalidTokenException {
+        return bugTrackingDao.fetchAssignedProjectList(token);
     }
 
     @Override
-    public List<Bug> fetchBugsPerProjectId(String token) throws InvalidTokenException, NoAccessException, NoDataFoundException {
-        return bugTrackingDao.fetchBugsPerProjectId(token);
+    public Bug reportNewBug(String token, String bugName, String bugDesc, String securityLevel, int projectId) throws InvalidTokenException, SQLException {
+        return bugTrackingDao.reportNewBug(token,bugName,bugDesc,securityLevel,projectId);
     }
 
     @Override
-    public boolean assignBugToDeveloper(String token,int bugId,int developerId) throws InvalidTokenException, NoAccessException {
-        return bugTrackingDao.assignBugToDeveloper(token,bugId,developerId);
+    public List<Bug> fetchBugsByProjectID(int projectId) throws SQLException, ProjectIdNotFoundException {
+        return bugTrackingDao.fetchBugsByProjectID(projectId);
     }
-
-    @Override
-    public boolean closeBug(String token) throws InvalidTokenException, NoAccessException {
-        return bugTrackingDao.closeBug(token);
-    }
-
-
 
 
 }
