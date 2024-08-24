@@ -1,0 +1,47 @@
+[
+    {
+        "id": "pm001",
+        "name": "Alice Johnson",
+        "email": "alice@example.com",
+        "password": "password123",
+        "role": "Project Manager",
+        "assignedProjects": [1, 2],
+        "lastLogin": "2024-08-24T12:00:00Z"
+    },
+    {
+        "id": "dev001",
+        "name": "Bob Smith",
+        "email": "bob@example.com",
+        "password": "password123",
+        "role": "Developer",
+        "assignedProjects": [1],
+        "lastLogin": "2024-08-24T12:00:00Z"
+    },
+    {
+        "id": "dev002",
+        "name": "Charlie Brown",
+        "email": "charlie@example.com",
+        "password": "password123",
+        "role": "Developer",
+        "assignedProjects": [2],
+        "lastLogin": "2024-08-24T12:00:00Z"
+    },
+    {
+        "id": "tester001",
+        "name": "Dana White",
+        "email": "dana@example.com",
+        "password": "password123",
+        "role": "Tester",
+        "assignedProjects": [1],
+        "lastLogin": "2024-08-24T12:00:00Z"
+    },
+    {
+        "id": "tester002",
+        "name": "Eve Davis",
+        "email": "eve@example.com",
+        "password": "password123",
+        "role": "Tester",
+        "assignedProjects": [2],
+        "lastLogin": "2024-08-24T12:00:00Z"
+    }
+]
