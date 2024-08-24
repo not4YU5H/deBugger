@@ -1,68 +1,40 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+/* base.css */
+/* General Reset */
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
-.container {
-    text-align: center;
-    margin-top: 50px;
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
 }
 
-.nav a {
-    margin: 10px;
-    padding: 15px 30px;
-    background-color: #333;
-    color: white;
-    text-decoration: none;
-    display: inline-block;
-    border-radius: 5px;
+h1, h2 {
+    color: #3fa877;
 }
 
-.nav a:hover {
-    background-color: #555;
-}
-
-h1 {
-    font-size: 36px;
-    margin-bottom: 30px;
-}
-
-/* Existing styles... */
-
-form {
-    margin: 20px auto;
-    max-width: 300px;
-    text-align: left;
-}
-
-form label {
-    display: block;
-    margin-bottom: 8px;
-}
-
-form input, form select, form button {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-form button {
-    background-color: #28a745;
-    color: white;
+button {
+    background-color: #3fa877;
     border: none;
+    border-radius: 5px;
+    color: white;
     cursor: pointer;
+    padding: 10px;
+    font-size: 1.2rem;
+    transition: background-color 0.3s ease;
 }
 
-form button:hover {
-    background-color: #218838;
+button:hover {
+    background-color: #2e8b6a;
 }
 
 .error {
     color: red;
-    font-size: 12px;
+    font-size: 0.875rem;
     margin-bottom: 15px;
+    text-align: center;
 }

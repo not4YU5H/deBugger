@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,14 +8,21 @@
     <link rel="stylesheet" href="tester.css">
 </head>
 <body>
-    <div class="container">
-        <h2>Tester Dashboard</h2>
-        <div id="user-info"></div>
-        <div id="projects-info"></div>
-        <a href="report_bug.html" class="button">Report a New Bug</a>
+    <div class="dashboard-container">
+        <header>
+            <h1>Tester Dashboard</h1>
+        </header>
+        <section id="user-info">
+            <!-- User information will be dynamically populated here -->
+        </section>
+        <section id="projects-info">
+            <!-- Projects and their details will be dynamically populated here -->
+        </section>
+        <a href="report_bug.html" class="btn-primary">Report a New Bug</a>
+        <!-- <button onclick="viewBugs()">View Bugs</button> -->
+        <!-- You may add other actions here -->
     </div>
-
-    <script src="../script.js"></script>
     <script src="tester.js"></script>
 </body>
 </html>
+
