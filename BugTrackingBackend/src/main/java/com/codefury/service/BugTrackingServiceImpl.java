@@ -1,6 +1,8 @@
 package com.codefury.service;
 
+import com.codefury.beans.Bug;
 import com.codefury.beans.Project;
+import com.codefury.beans.Team;
 import com.codefury.beans.User;
 import com.codefury.dao.BugTrackingDao;
 import com.codefury.dao.StorageFactory;
@@ -101,6 +103,39 @@ public class BugTrackingServiceImpl implements BugTrackingService{
     @Override
     public boolean createProject(String token, Project proj, List<Integer> team) throws InvalidTokenException, ManagerMaxProjectException, ProjectStartDateException, TeamMemberException, NoAccessException, UserNotFoundException {
         return bugTrackingDao.createProject(token,proj,team);
+    }
+
+
+    //Sakshi code
+
+    public List<Project> fetchProjectsManagedByManagerId(String token) throws InvalidTokenException, NoAccessException, NoDataFoundException {
+
+        return bugTrackingDao.fetchProjectsManagedByManagerId(token);
+    }
+
+    @Override
+    public Project fetchProjectDetails(String token) throws InvalidTokenException, NoAccessException, NoDataFoundException {
+        return bugTrackingDao.fetchProjectDetails(token);
+    }
+
+    @Override
+    public Team fetchRolesByTeamMemberId(String token) throws InvalidTokenException, NoAccessException, NoDataFoundException {
+        return bugTrackingDao.fetchRolesByTeamMemberId(token);
+    }
+
+    @Override
+    public List<Bug> fetchBugsPerProjectId(String token) throws InvalidTokenException, NoAccessException, NoDataFoundException {
+        return bugTrackingDao.fetchBugsPerProjectId(token);
+    }
+
+    @Override
+    public boolean assignBugToDeveloper(String token,int bugId,int developerId) throws InvalidTokenException, NoAccessException {
+        return bugTrackingDao.assignBugToDeveloper(token,bugId,developerId);
+    }
+
+    @Override
+    public boolean closeBug(String token) throws InvalidTokenException, NoAccessException {
+        return bugTrackingDao.closeBug(token);
     }
 
 
