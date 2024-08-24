@@ -1,19 +1,16 @@
 package com.codefury.service;
 
-import com.codefury.beans.Bug;
 import com.codefury.beans.Project;
 import com.codefury.beans.User;
 import com.codefury.dao.BugTrackingDao;
 import com.codefury.dao.StorageFactory;
 //jar files have tp be manually downloaded from the internet
-import com.codefury.exception.InvalidTokenException;
-import com.codefury.exception.ProjectIdNotFoundException;
+import com.codefury.exception.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -102,23 +99,11 @@ public class BugTrackingServiceImpl implements BugTrackingService{
     }
 
     @Override
-    public List<Project> fetchProjectDetails(String token) throws InvalidTokenException {
-        return bugTrackingDao.fetchProjectDetails(token);
+    public boolean createProject(String token, Project proj, List<Integer> team) throws InvalidTokenException, ManagerMaxProjectException, ProjectStartDateException, TeamMemberException, NoAccessException, UserNotFoundException {
+        return bugTrackingDao.createProject(token,proj,team);
     }
 
-    @Override
-    public List<Project> fetchAssignedProjectList(String token) throws InvalidTokenException {
-        return bugTrackingDao.fetchAssignedProjectList(token);
-    }
 
-    public Bug reportNewBug(String token, String bugName, String bugDesc, String securityLevel, int projectId) throws InvalidTokenException, SQLException {
-        return bugTrackingDao.reportNewBug(token,bugName,bugDesc,securityLevel,projectId);
-    }
-
-    @Override
-    public List<Bug> fetchBugsByProjectID(int projectId) throws SQLException, ProjectIdNotFoundException {
-        return bugTrackingDao.fetchBugsByProjectID(projectId);
-    }
 
 
 }

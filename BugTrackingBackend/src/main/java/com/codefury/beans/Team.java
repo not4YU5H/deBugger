@@ -19,6 +19,10 @@ public class Team {
         this.managerId = managerId;
     }
 
+    public Team() {
+
+    }
+
     public int getTeamId() {
         return teamId;
     }

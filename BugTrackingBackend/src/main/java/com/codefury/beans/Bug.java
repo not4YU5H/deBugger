@@ -1,5 +1,7 @@
 package com.codefury.beans;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class Bug {
@@ -8,7 +10,17 @@ public class Bug {
     private String bugName;
     private String bugDescription;
     private int createdBy;//UserId
-    private Date createdOn;
+    private LocalDateTime createdOn;
+    private int assigned_to;
+
+    public int getAssigned_to() {
+        return assigned_to;
+    }
+
+    public void setAssigned_to(int assigned_to) {
+        this.assigned_to = assigned_to;
+    }
+
     private String imageUrls;
     private String status;
     private String securityLevel;
@@ -53,11 +65,11 @@ public class Bug {
         this.createdBy = createdBy;
     }
 
-    public Date getCreatedOn() {
+    public LocalDateTime getCreatedOn() {
         return createdOn;
     }
 
-    public void setCreatedOn(Date createdOn) {
+    public void setCreatedOn(LocalDateTime createdOn) {
         this.createdOn = createdOn;
     }
 
@@ -95,6 +107,7 @@ public class Bug {
                 ", bugDescription='" + bugDescription + '\'' +
                 ", createdBy=" + createdBy +
                 ", createdOn=" + createdOn +
+                ", assigned_to=" + assigned_to +
                 ", imageUrls='" + imageUrls + '\'' +
                 ", status='" + status + '\'' +
                 ", securityLevel='" + securityLevel + '\'' +
