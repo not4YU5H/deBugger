@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report a New Bug</title>
+    <link rel="stylesheet" href="tester.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Report a New Bug</h2>
+        <form id="report-bug-form">
+            <label for="project-name">Project Name:</label>
+            <select id="project-name" required></select>
+            <br>
+            <label for="bug-title">Bug Title:</label>
+            <input type="text" id="bug-title" required>
+            <br>
+            <label for="bug-description">Bug Description:</label>
+            <textarea id="bug-description" required></textarea>
+            <br>
+            <label for="severity">Severity:</label>
+            <select id="severity" required>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+            </select>
+            <br>
+            <button type="submit">Report Bug</button>
+        </form>
+    </div>
+
+    <script src="../script.js"></script>
+    <script src="report_bug.js"></script>
+</body>
+</html>
