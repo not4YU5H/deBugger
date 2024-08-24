@@ -5,17 +5,17 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 public class User {
-    private int userId;
+    private int userid;
     private String password;
     private String email;
     private String username;
     private String name;
     private String address;
-    private LocalDate joinDate;
-    private String contactNumber;
+    private LocalDate joindate;
+    private String contactnumber;
     private LocalDate dob;
     private String gender;
-    private Date userCreationTime;
+    private Date usercreationtime;
     private String profilePictureUrl;
     private String role;
     private int assignedProjects;
@@ -23,11 +23,11 @@ public class User {
 
     // Getters and Setters
     public int getUserId() {
-        return userId;
+        return userid;
     }
 
     public void setUserId(int userId) {
-        this.userId = userId;
+        this.userid = userId;
     }
 
     public String getPassword() {
@@ -71,19 +71,19 @@ public class User {
     }
 
     public LocalDate getJoinDate() {
-        return joinDate;
+        return joindate;
     }
 
     public void setJoinDate(LocalDate joinDate) {
-        this.joinDate = joinDate;
+        this.joindate = joinDate;
     }
 
     public String getContactNumber() {
-        return contactNumber;
+        return contactnumber;
     }
 
     public void setContactNumber(String contactNumber) {
-        this.contactNumber = contactNumber;
+        this.contactnumber = contactNumber;
     }
 
     public LocalDate getDob() {
@@ -103,11 +103,11 @@ public class User {
     }
 
     public Date getUserCreationTime() {
-        return userCreationTime;
+        return usercreationtime;
     }
 
     public void setUserCreationTime(Date userCreationTime) {
-        this.userCreationTime = userCreationTime;
+        this.usercreationtime = userCreationTime;
     }
 
     public String getProfilePictureUrl() {
@@ -145,17 +145,17 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "userId=" + userId +
+                "userId=" + userid +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
-                ", joinDate=" + joinDate +
-                ", contactNumber='" + contactNumber + '\'' +
+                ", joinDate=" + joindate +
+                ", contactNumber='" + contactnumber + '\'' +
                 ", dob=" + dob +
                 ", gender='" + gender + '\'' +
-                ", userCreationTime=" + userCreationTime +
+                ", userCreationTime=" + usercreationtime +
                 ", profilePictureUrl='" + profilePictureUrl + '\'' +
                 ", role='" + role + '\'' +
                 ", assignedProjects=" + assignedProjects +

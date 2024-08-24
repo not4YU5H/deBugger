@@ -23,18 +23,23 @@ public class BugTrackingTest {
 
         //Authentication and Authorization points
         //Sample login attempt
-        String token = bugTrackingService.login("johndoe","password123");
+        String token = bugTrackingService.login("davidbrown","devPass456");
 
 
 
         //fetching user information
         User user = null;
         try {
+//            System.out.println("This is your token"+token); used for debugging
             user = bugTrackingService.fetchUserInfo(token);
+//            System.out.println("token works"); used for debugging
         } catch (InvalidTokenException e) {
             e.getMessage();
+//            System.out.println("token is invalid"); used for debugging
         }
-        System.out.println(user);
+        System.out.println(user.getUserId()+" "
+        +user.getPassword()+" " +
+                " ");
 
         //
         

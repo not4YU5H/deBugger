@@ -39,14 +39,14 @@ public class BugTrackingDaoImpl implements BugTrackingDao{
         //This compares the time the token was created and the current time now to check if the token is stil valid
         //if the time stamp shows more than 10 min it gets removed from the hashmap
         //If not it moves to the authorization checks
-        for(String tok :tokenvalidity.keySet()){
-            if(tok.equals(token) && compareTime(tokenvalidity.get(tok),LocalDateTime.now())){
-                tokenvalidity.remove(tok);
-            }
-        }
-        if(!tokenvalidity.containsKey(token)){
-            throw new InvalidTokenException("Your Token is invalid Login Again");
-        }
+//        for(String tok :tokenvalidity.keySet()){
+//            if(tok.equals(token) && compareTime(tokenvalidity.get(tok),LocalDateTime.now())){
+//                tokenvalidity.remove(tok);
+//            }
+//        }
+//        if(!tokenvalidity.containsKey(token)){
+//            throw new InvalidTokenException("Your Token is invalid Login Again");
+//        }
 
         String auth;
         int id;
@@ -57,7 +57,7 @@ public class BugTrackingDaoImpl implements BugTrackingDao{
             auth = encryption.decrypt(token).split(",")[2];
             id = Integer.parseInt(encryption.decrypt(token).split(",")[0]);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new InvalidTokenException("Token has No access to the system.");
         }
 
             if(auth.equals("Admin")){
@@ -158,58 +158,66 @@ public class BugTrackingDaoImpl implements BugTrackingDao{
 
     @Override
     public List<Project> fetchProjectInfoByUserId(String token) throws InvalidTokenException {
-        int auth = (int) isAuthorized(token).get(0);
-        int id = (int) isAuthorized(token).get(1);
-        List<Project> projects = new ArrayList<>();
-        String query = "SELECT p.* " +
-                "FROM PROJECT p " +
-                "WHERE p.TEAM_ID = (" +
-                "    SELECT t.TEAMID " +
-                "    FROM TEAMS t " +
-                "    WHERE t.MANAGER_ID = ? OR FIND_IN_SET(?, t.TEAM_MEMBERS)" +
-                ");";
-        try (PreparedStatement pst = conn.prepareStatement(query)) {
-            pst.setInt(1, id);
-            pst.setInt(2, id);
-            ResultSet rs = pst.executeQuery();
 
-            while (rs.next()) {
-                Project project = new Project();
-                project.setProjectId(rs.getInt("PROJECTID"));
-                project.setName(rs.getString("NAME"));
-                project.setDescription(rs.getString("DESCRIPTION"));
-                project.setStakeHolders(rs.getString("STAKE_HOLDERS"));
-                project.setClientName(rs.getString("CLIENT_NAME"));
-                project.setBudget(rs.getBigDecimal("BUDGET"));
-                project.setPoc(rs.getString("POC"));
-                project.setStartDate(rs.getDate("START_DATE"));
-                project.setTeamId(rs.getInt("TEAM_ID"));
-                project.setStatus(rs.getString("STATUS"));
+        int auth = (int) isAuthorized(token).get(0); // Check if user's authorization
+        int id = (int) isAuthorized(token).get(1);   // Fetch user ID of user
+        if(auth==2) {
+            List<Project> projects = new ArrayList<>();
+            String query = "SELECT p.* " +
+                    "FROM PROJECT p " +
+                    "WHERE p.TEAM_ID IN (" +
+                    "    SELECT t.TEAMID " +
+                    "    FROM TEAMS t " +
+                    "    WHERE t.MANAGER_ID = ? OR FIND_IN_SET(?, t.TEAM_MEMBERS)" +
+                    ");";
 
-                projects.add(project);
+            try (PreparedStatement pst = conn.prepareStatement(query)) {
+                pst.setInt(1, id); // Manager ID
+                pst.setInt(2, id); // User ID in team members
+                ResultSet rs = pst.executeQuery();
+
+                while (rs.next()) {
+                    Project project = new Project();
+                    project.setProjectId(rs.getInt("PROJECTID"));
+                    project.setName(rs.getString("NAME"));
+                    project.setDescription(rs.getString("DESCRIPTION"));
+                    project.setStakeHolders(rs.getString("STAKE_HOLDERS"));
+                    project.setClientName(rs.getString("CLIENT_NAME"));
+                    project.setBudget(rs.getBigDecimal("BUDGET"));
+                    project.setPoc(rs.getString("POC"));
+                    project.setStartDate(rs.getDate("START_DATE"));
+                    project.setTeamId(rs.getInt("TEAM_ID"));
+                    project.setStatus(rs.getString("STATUS"));
+
+                    projects.add(project);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException("Failed to fetch projects for user ID: " + id, e);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to fetch projects for user ID: " + id, e);
-        }
-        return projects;
+            return projects;
+        }else
+            throw new InvalidTokenException("Token has No access to the system.");
     }
+
 
 
 
     @Override
-    public boolean markGivenBugForClose(int bugId) throws BugNotFoundException,RuntimeException {
-        try {
-            PreparedStatement pst = conn.prepareStatement("UPDATE BUGS SET STATUS='CLOSED' WHERE BUG_ID=?;");
+    public boolean markGivenBugForClose(int bugId) throws BugNotFoundException, RuntimeException {
+        String query = "UPDATE BUGS SET STATUS='CLOSED' WHERE BUG_ID=?;";
+
+        try (PreparedStatement pst = conn.prepareStatement(query)) {
             pst.setInt(1, bugId);
             int rowsAffected = pst.executeUpdate();
-            if(!(rowsAffected > 0)) {
+            if (rowsAffected == 0) {
                 throw new BugNotFoundException("Bug not found with ID: " + bugId);
-            }else
-                return true;
+            }
+            return true;
         } catch (SQLException e) {
             throw new RuntimeException("Error marking bug as closed: " + bugId, e);
         }
     }
+
 
 
 

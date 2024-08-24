@@ -14,6 +14,20 @@ public class Project {
     private Date startDate;
     private int teamId; //Only pass Team ID for easy transfer of data to DB
     private String status;
+public Project(){}
+
+    public Project(int projectId, String name, String description, String stakeHolders, String clientName, BigDecimal budget, String poc, Date startDate, int teamId, String status) {
+        this.projectId = projectId;
+        this.name = name;
+        this.description = description;
+        this.stakeHolders = stakeHolders;
+        this.clientName = clientName;
+        this.budget = budget;
+        this.poc = poc;
+        this.startDate = startDate;
+        this.teamId = teamId;
+        this.status = status;
+    }
 
     // Getters and Setters
     public int getProjectId() {
