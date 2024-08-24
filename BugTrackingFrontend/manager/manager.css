@@ -1,0 +1,29 @@
+.container {
+    padding: 20px;
+}
+
+h2 {
+    color: #333;
+}
+
+.button {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+.button:hover {
+    background-color: #218838;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    margin: 10px 0;
+}
