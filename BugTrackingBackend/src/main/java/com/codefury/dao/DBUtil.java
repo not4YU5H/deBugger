@@ -16,7 +16,7 @@ public class DBUtil {
                 throw new RuntimeException(e);
             }
             String url = "jdbc:mysql://localhost:3307/codefury";
-            String user = "root";
+            String user = "root"; //LOCALHOST ID
             String password = "codefury";
 
 
