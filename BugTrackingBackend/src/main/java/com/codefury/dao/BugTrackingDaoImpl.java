@@ -51,7 +51,6 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
         }
         if (!tokenvalidity.containsKey(token)) {
             security.log("Tried Signing in with expired/illegal token "+LocalDateTime.now().toString(), Level.WARNING);
-
             throw new InvalidTokenException("Invalid Token");
         }
 
@@ -561,7 +560,223 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
     }
 
 
+//    Abhiraj code
 
+    @Override
+    public List<Project> fetchProjectInfoByUserId(String token) throws InvalidTokenException {
+
+        int auth = (int) isAuthorized(token).get(0); // Check if user's authorization
+        int id = (int) isAuthorized(token).get(1);   // Fetch user ID of user
+        if(auth==2) {
+            List<Project> projects = new ArrayList<>();
+            String query = "SELECT p.* " +
+                    "FROM PROJECT p " +
+                    "WHERE p.TEAM_ID IN (" +
+                    "    SELECT t.TEAMID " +
+                    "    FROM TEAMS t " +
+                    "    WHERE t.MANAGER_ID = ? OR FIND_IN_SET(?, t.TEAM_MEMBERS)" +
+                    ");";
+
+            try (PreparedStatement pst = conn.prepareStatement(query)) {
+                pst.setInt(1, id); // Manager ID
+                pst.setInt(2, id); // User ID in team members
+                ResultSet rs = pst.executeQuery();
+
+                while (rs.next()) {
+                    Project project = new Project();
+                    project.setProjectId(rs.getInt("PROJECTID"));
+                    project.setName(rs.getString("NAME"));
+                    project.setDescription(rs.getString("DESCRIPTION"));
+                    project.setStakeHolders(rs.getString("STAKE_HOLDERS"));
+                    project.setClientName(rs.getString("CLIENT_NAME"));
+                    project.setBudget(rs.getDouble("BUDGET"));
+                    project.setPoc(rs.getString("POC"));
+                    project.setStartDate(rs.getDate("START_DATE").toLocalDate());
+                    project.setTeamId(rs.getInt("TEAM_ID"));
+                    project.setStatus(rs.getString("STATUS"));
+
+                    projects.add(project);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException("Failed to fetch projects for user ID: " + id, e);
+            }
+            return projects;
+        }else
+            throw new InvalidTokenException("Token has No access to the system.");
+    }
+
+
+
+
+    @Override
+    public boolean markGivenBugForClose(int bugId) throws BugNotFoundException, RuntimeException {
+        String query = "UPDATE BUGS SET STATUS='CLOSED' WHERE BUG_ID=?;";
+
+        try (PreparedStatement pst = conn.prepareStatement(query)) {
+            pst.setInt(1, bugId);
+            int rowsAffected = pst.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new BugNotFoundException("Bug not found with ID: " + bugId);
+            }
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error marking bug as closed: " + bugId, e);
+        }
+    }
+
+
+    //Venky code
+//-----------------------------------------------------------------------------------------
+    //fetchProjectDetails() method is used for fetching all the project details to a particular tester
+
+    public List<Project> fetchProjectDetailslist(String token) throws InvalidTokenException{
+        int auth = (int) isAuthorized(token).get(0);
+        int id = (int) isAuthorized(token).get(1);
+        if(auth == 1) { // Assuming '2' indicates a tester role
+            PreparedStatement pst = null;
+            List<Project> projects = new ArrayList<>();
+
+            try {
+                // Fetch projects assigned to the tester
+                pst = conn.prepareStatement("SELECT PROJECT.PROJECTID, PROJECT.NAME, PROJECT.STATUS FROM PROJECT JOIN TEAMS ON PROJECT.TEAM_ID = TEAMS.TEAMID WHERE FIND_IN_SET(?, TEAMS.TEAM_MEMBERS);");
+                pst.setInt(1, id);
+                ResultSet rs = pst.executeQuery();
+
+                while (rs.next()) {
+                    Project project = new Project();
+                    project.setProjectId(rs.getInt("PROJECTID"));
+                    project.setName(rs.getString("NAME"));
+                    project.setStatus(rs.getString("STATUS"));
+                    projects.add(project);
+                }
+                return projects;
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+                return null;
+            }
+        }
+        return null;
+    }
+
+    //fetchAssignedProjectList() method is used for fetching list of the project details to a particular tester
+    public List<Project> fetchAssignedProjectList(String token) throws InvalidTokenException {
+        List<Project> assignedProjects = fetchProjectDetailslist(token);
+        return assignedProjects;
+    }
+
+    //REPORT NEW BUG METHOD
+    public Bug reportNewBug(String token, String bugName, String bugDesc, String securityLevel, int projectId) throws InvalidTokenException,SQLException {
+        int auth = (int) isAuthorized(token).get(0);
+        int userId = (int) isAuthorized(token).get(1);
+
+        if (auth == 1) {
+            PreparedStatement pst = null;
+            ResultSet rs = null;
+            Bug bug = new Bug();
+
+            // Insert the new bug into the BUGS table
+            pst = conn.prepareStatement(
+                    "INSERT INTO BUGS (PROJECT_ID, BUG_NAME, BUG_DESCRIPTION, CREATEDBY, CREATEDON, STATUS, SECURITY_LEVEL) " +
+                            "VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, 'Open', ?)", Statement.RETURN_GENERATED_KEYS);
+            pst.setInt(1, projectId);
+            pst.setString(2, bugName);
+            pst.setString(3, bugDesc);
+            pst.setInt(4, userId);
+            pst.setString(5, securityLevel);
+            pst.executeUpdate();
+
+            // Get the generated bug ID
+            rs = pst.getGeneratedKeys();
+            int bugId = 0;
+            if (rs.next()) {
+                bugId = rs.getInt(1);
+                bug.setBugId(bugId);
+            }
+
+            bug.setBugName(bugName);
+            bug.setBugDescription(bugDesc);
+            bug.setSecurityLevel(securityLevel);
+
+            //display the new bug created
+            displayBugDetails(bug);
+            return bug;
+        }
+        else {
+            throw new InvalidTokenException("User is not authorized to report bugs.");
+        }
+    }
+
+
+
+    //DISPLAY BUG
+    private void displayBugDetails(Bug bug) {
+        System.out.println("Bug Reported Successfully!");
+        System.out.println("Project ID: " + bug.getProjectId());
+        System.out.println("Bug ID: " + bug.getBugId());
+        System.out.println("Bug Name: " + bug.getBugName());
+        System.out.println("Bug Description: " + bug.getBugDescription());
+        System.out.println("Severity Level: " + bug.getSecurityLevel());
+        System.out.println("Created By (User ID): " + bug.getCreatedBy());
+        System.out.println("Created On: " + LocalDateTime.now());
+    }
+
+    //VIEW BUG
+    @Override
+    public List<Bug> fetchBugsByProjectID(String token, int projectId) throws SQLException, ProjectIdNotFoundException, InvalidTokenException, NoAccessException {
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        List<Bug> bugsList = new ArrayList<>();
+
+        int auth = (int) isAuthorized(token).get(0);
+        int userId = (int) isAuthorized(token).get(1);
+        if(auth>2 || auth<0){ //Because manager developer tester cn access
+            throw new NoAccessException("No Access Granted to you");
+        }
+
+        // Fetch all bugs for the given project ID from the BUGS table
+        String bugQuery = "SELECT b.BUG_ID, b.PROJECT_ID, b.BUG_NAME, b.BUG_DESCRIPTION, b.CREATEDBY, b.CREATEDON, " +
+                "b.STATUS, b.SECURITY_LEVEL, p.NAME as PROJECT_NAME " +
+                "FROM BUGS b " +
+                "JOIN PROJECT p ON b.PROJECT_ID = p.PROJECTID " +
+                "WHERE b.PROJECT_ID = ?";
+        pst = conn.prepareStatement(bugQuery);
+        pst.setInt(1, projectId);
+        rs = pst.executeQuery();
+
+        // Check if any bugs exist for the given project ID
+        boolean hasBugs = false;
+        while (rs.next()) {
+            hasBugs = true;
+
+            Bug bug = new Bug();
+            bug.setBugId(rs.getInt("BUG_ID"));
+            bug.setProjectId(rs.getInt("PROJECT_ID"));
+            bug.setBugName(rs.getString("BUG_NAME"));
+            bug.setBugDescription(rs.getString("BUG_DESCRIPTION"));
+            bug.setSecurityLevel(rs.getString("SECURITY_LEVEL"));
+            bug.setCreatedBy(rs.getInt("CREATEDBY"));
+
+            // Convert SQL Timestamp to LocalDateTime and then to Date
+            LocalDateTime createdOnLDT = rs.getTimestamp("CREATEDON").toLocalDateTime();
+//            Date createdOnDate = (Date) Date.from(createdOnLDT.atZone(ZoneId.systemDefault()).toInstant());
+            bug.setCreatedOn(createdOnLDT);
+
+            // Add the bug to the list
+            bugsList.add(bug);
+        }
+
+        // If no bugs were found
+        if (!hasBugs) {
+            throw new ProjectIdNotFoundException("No bugs found for Project ID: " + projectId);
+        }
+
+        // Close resources
+        if (rs != null) rs.close();
+        if (pst != null) pst.close();
+
+        // Return the list of bugs
+        return bugsList;
+    }
 
 }
 

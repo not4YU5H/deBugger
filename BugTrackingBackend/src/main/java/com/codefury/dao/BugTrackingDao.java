@@ -6,6 +6,7 @@ import com.codefury.beans.Team;
 import com.codefury.beans.User;
 import com.codefury.exception.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface BugTrackingDao {
@@ -32,4 +33,14 @@ public interface BugTrackingDao {
 
     boolean closeBug(String token) throws InvalidTokenException, NoAccessException;
 
+    List<Project> fetchProjectInfoByUserId(String token) throws InvalidTokenException;
+
+    boolean markGivenBugForClose(int bugId) throws BugNotFoundException;
+
+    List<Project> fetchAssignedProjectList(String token)throws InvalidTokenException;
+
+    Bug reportNewBug(String token, String bugName, String bugDesc, String securityLevel, int projectId) throws InvalidTokenException, SQLException;
+
+    //VIEW BUG
+    List<Bug> fetchBugsByProjectID(String token, int projectId) throws SQLException, ProjectIdNotFoundException, InvalidTokenException, NoAccessException;
 }

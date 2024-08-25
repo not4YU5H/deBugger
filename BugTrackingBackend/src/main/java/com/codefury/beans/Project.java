@@ -2,9 +2,7 @@ package com.codefury.beans;
 
 
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 
 public class Project {
     private int projectId;
