@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -138,6 +139,24 @@ public class BugTrackingServiceImpl implements BugTrackingService{
         return bugTrackingDao.closeBug(token);
     }
 
+
+    //Tester
+
+
+    @Override
+    public List<Project> fetchAssignedProjectList(String token) throws InvalidTokenException {
+        return bugTrackingDao.fetchAssignedProjectList(token);
+    }
+
+    @Override
+    public Bug reportNewBug(String token, String bugName, String bugDesc, String securityLevel, int projectId) throws InvalidTokenException, SQLException {
+        return bugTrackingDao.reportNewBug(token,bugName,bugDesc,securityLevel,projectId);
+    }
+
+    @Override
+    public List<Bug> fetchBugsByProjectID(String token,int projectId) throws SQLException, ProjectIdNotFoundException, InvalidTokenException, NoAccessException {
+        return bugTrackingDao.fetchBugsByProjectID(token,projectId);
+    }
 
 
 

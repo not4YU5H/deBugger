@@ -6,6 +6,7 @@ import com.codefury.beans.Team;
 import com.codefury.beans.User;
 import com.codefury.exception.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface BugTrackingService {
@@ -34,6 +35,12 @@ public interface BugTrackingService {
     boolean assignBugToDeveloper(String token,int bugId,int developerId) throws InvalidTokenException, NoAccessException;
 
     boolean closeBug(String token) throws InvalidTokenException, NoAccessException;
+
+    List<Project> fetchAssignedProjectList(String token) throws InvalidTokenException;
+
+    Bug reportNewBug(String token, String bugName, String bugDesc, String securityLevel, int projectId) throws InvalidTokenException, SQLException;
+
+    List<Bug> fetchBugsByProjectID(String token,int projectId) throws SQLException, ProjectIdNotFoundException, InvalidTokenException, NoAccessException;
 
 
 }

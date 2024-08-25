@@ -134,6 +134,9 @@ public class BugTrackingTest {
         } catch (InvalidTokenException | NoAccessException e) {
             System.out.println("Error closing bug: " + e.getMessage());
         }
+
+
     }
+
 }
 

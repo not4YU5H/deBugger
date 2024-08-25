@@ -32,7 +32,7 @@ public class EncryptionUtil {
             logger.addHandler(fileHandler);
 
             // Optional: Set the default logging level for this logger
-            logger.setLevel(Level.ALL);
+            logger.setLevel(Level.OFF);
 
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Failed to initialize logger handler", e);
