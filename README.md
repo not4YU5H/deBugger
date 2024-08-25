@@ -1,5 +1,5 @@
 # TheeBugger$
-A comprehensive bug tracking system designed to streamline the process of reporting, and resolving software bugs. It provides a user-friendly interface for creating and managing bug reports, assigning them to developers, and tracking their progress until they are resolved. With deBugger, teams can collaborate effectively, ensuring that no bug goes unnoticed or unresolved. It also offers features such as automated bug triaging, customizable workflows, and detailed reporting, making it an essential tool for any software development project.
+The bug tracking website is designed to streamline the process of identifying, reporting, and resolving bugs within software projects. It supports three user roles: **Manager**, **Tester**, and **Developer**, each with specific permissions and responsibilities. The platform employs a robust **token-based authentication and authorization system** to ensure secure access to features and data. Built with a **layered architecture**, the backend is developed in **Java**, ensuring scalability and maintainability, while the frontend is crafted with **HTML** and **CSS** for a responsive and user-friendly interface. This setup allows for efficient management of bugs and facilitates smooth collaboration among team members.
 
 <details>
 <summary>Frontend Testing</summary>
