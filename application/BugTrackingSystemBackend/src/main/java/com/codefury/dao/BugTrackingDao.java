@@ -43,4 +43,6 @@ public interface BugTrackingDao {
 
     //VIEW BUG
     List<Bug> fetchBugsByProjectID(String token, int projectId) throws SQLException, ProjectIdNotFoundException, InvalidTokenException, NoAccessException;
+
+    boolean register(User user);
 }

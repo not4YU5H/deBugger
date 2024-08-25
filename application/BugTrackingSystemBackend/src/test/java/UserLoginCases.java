@@ -7,6 +7,8 @@ import com.codefury.service.BugTrackingServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+
 public class UserLoginCases {
     private BugTrackingService bugTrackingService;
 
@@ -19,6 +21,31 @@ public class UserLoginCases {
         // Add any necessary setup or initialization
     }
 
+    @Test
+    public void testInsertUser() {
+        // Arrange
+        User user = new User();
+        user.setPassword("password123");
+        user.setEmail("user@example.com");
+        user.setUsername("testuser");
+        user.setName("Test User");
+        user.setAddress("123 Test Street");
+        user.setJoinDate(LocalDate.of(2024, 8, 24));
+        user.setContactNumber("1234567890");
+        user.setDob(LocalDate.of(1990, 1, 1));
+        user.setGender("Male");
+        user.setUserCreationTime(new java.util.Date());
+        user.setProfilePictureUrl("http://example.com/profile.jpg");
+        user.setRole("Developer");
+        user.setAssignedProjects(5);
+        user.setLastLoggedInDatetime(null);
+
+        // Act
+        boolean result = bugTrackingService.register(user);
+
+        // Assert
+        assertTrue(result, "The register method should return true for a successful insert.");
+    }
     @Test
     public void testLoginWithValidCredentials() {
         String token = bugTrackingService.login(username, password);

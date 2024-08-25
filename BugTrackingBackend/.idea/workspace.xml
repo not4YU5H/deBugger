@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="99876dde-2012-4f36-98db-cdba81ea69c0" name="Changes" comment="All Modules Combined">
+      <change beforePath="$PROJECT_DIR$/../application/BugTrackingSystemBackend/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../application/BugTrackingSystemBackend/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../application/BugTrackingSystemBackend/src/main/java/com/codefury/dao/BugTrackingDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/../application/BugTrackingSystemBackend/src/main/java/com/codefury/dao/BugTrackingDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../application/BugTrackingSystemBackend/src/main/java/com/codefury/dao/BugTrackingDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../application/BugTrackingSystemBackend/src/main/java/com/codefury/dao/BugTrackingDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../application/BugTrackingSystemBackend/src/main/java/com/codefury/service/BugTrackingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../application/BugTrackingSystemBackend/src/main/java/com/codefury/service/BugTrackingService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../application/BugTrackingSystemBackend/src/main/java/com/codefury/service/BugTrackingServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../application/BugTrackingSystemBackend/src/main/java/com/codefury/service/BugTrackingServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../application/BugTrackingSystemBackend/src/test/java/UserLoginCases.java" beforeDir="false" afterPath="$PROJECT_DIR$/../application/BugTrackingSystemBackend/src/test/java/UserLoginCases.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="Manager-and-Developer-combined" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;samabraham2022&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/not4YU5H/deBugger.git&quot;,
+    &quot;accountId&quot;: &quot;c0504e3a-ff6e-4cfc-8986-00c07bff7c8d&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2kk288OsePOjnShz7RrX8AJvhzi" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.BugTrackingTest.executor": "Run",
+    "Application.EncryptionUtil.executor": "Run",
+    "Downloaded.Files.Path.Enabled": "false",
+    "JUnit.BugTrackingServiceTest.executor": "Run",
+    "JUnit.DeveloperServiceTest.executor": "Run",
+    "JUnit.ManagerTestCases.executor": "Run",
+    "JUnit.ManagertestCases.executor": "Run",
+    "JUnit.TesterTestCases.executor": "Run",
+    "JUnit.UserLoginCases.executor": "Run",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/samabrahamjoshy/Documents/Training/deBugger/BugTrackingBackend/src/main/java/com/codefury/exception",
+    "onboarding.tips.debug.path": "/Users/samabrahamjoshy/Documents/Training/Codefury/src/Main.java",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "com.poratu.idea.plugins.tomcat.setting.TomcatServersConfigurable"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/java/com/codefury/exception" />
+      <recent name="$PROJECT_DIR$/src/main/java/com/codefury/service" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/src" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="" />
+      <recent name="com.codefury.exception" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="BugTrackingTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="BugTrackingTest" />
+      <module name="Bugtrackingarchtypechange" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DeveloperServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Bugtrackingarchtypechange" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="DeveloperServiceTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ManagertestCases" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Bugtrackingarchtypechange" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="ManagertestCases" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TesterTestCases" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Bugtrackingarchtypechange" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="TesterTestCases" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserLoginCases" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Bugtrackingarchtypechange" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="UserLoginCases" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.TesterTestCases" />
+        <item itemvalue="JUnit.UserLoginCases" />
+        <item itemvalue="JUnit.DeveloperServiceTest" />
+        <item itemvalue="JUnit.ManagertestCases" />
+        <item itemvalue="Application.BugTrackingTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="99876dde-2012-4f36-98db-cdba81ea69c0" name="Changes" comment="" />
+      <created>1723813091272</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1723813091272</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Parsing json file and adding the users to db done">
+      <option name="closed" value="true" />
+      <created>1723961967883</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1723961967883</updated>
+    </task>
+    <task id="LOCAL-00002" summary="small changes to the authentication procedure now it returns list with quthorization level and userid of the person">
+      <option name="closed" value="true" />
+      <created>1723973617875</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1723973617875</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Architecture change">
+      <option name="closed" value="true" />
+      <created>1723975121589</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1723975121589</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Architecture change">
+      <option name="closed" value="true" />
+      <created>1723975139066</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1723975139066</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Architecture change">
+      <option name="closed" value="true" />
+      <created>1723981553269</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1723981553269</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Architecture change">
+      <option name="closed" value="true" />
+      <created>1723981702220</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1723981702220</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Fetch user info and create project completed">
+      <option name="closed" value="true" />
+      <created>1723994927573</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1723994927573</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Fetch user info and create project completed">
+      <option name="closed" value="true" />
+      <created>1723996919860</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1723996919860</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Fetch user info and create project completed">
+      <option name="closed" value="true" />
+      <created>1724340626321</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1724340626321</updated>
+    </task>
+    <task id="LOCAL-00010" summary="logging Exceptions have also been completed object must be called and implemented in other methods tooo">
+      <option name="closed" value="true" />
+      <created>1724343051216</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1724343051216</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Refactored Some code">
+      <option name="closed" value="true" />
+      <created>1724347646857</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1724347646857</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Refactored Some code">
+      <option name="closed" value="true" />
+      <created>1724347658009</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1724347658009</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Refactored Some code">
+      <option name="closed" value="true" />
+      <created>1724348416717</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1724348416717</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Manager Comleted comments to be added with checks on all logic">
+      <option name="closed" value="true" />
+      <created>1724505842789</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1724505842789</updated>
+    </task>
+    <task id="LOCAL-00015" summary="All Modules Combined">
+      <option name="closed" value="true" />
+      <created>1724582906158</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1724582906158</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
+    <servers />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName=".env" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Parsing json file and adding the users to db done" />
+    <MESSAGE value="small changes to the authentication procedure now it returns list with quthorization level and userid of the person" />
+    <MESSAGE value="Architecture change" />
+    <MESSAGE value="Fetch user info and create project completed" />
+    <MESSAGE value="logging Exceptions have also been completed object must be called and implemented in other methods tooo" />
+    <MESSAGE value="Refactored Some code" />
+    <MESSAGE value="Manager Comleted comments to be added with checks on all logic" />
+    <MESSAGE value="All Modules Combined" />
+    <option name="LAST_COMMIT_MESSAGE" value="All Modules Combined" />
+  </component>
+</project>

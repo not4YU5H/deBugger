@@ -29,6 +29,11 @@ public class BugTrackingServiceImpl implements BugTrackingService{
 
 
     @Override
+    public boolean register(User user) {
+        return bugTrackingDao.register(user);
+    }
+
+    @Override
     public String login(String username, String password) {
         return bugTrackingDao.login(username,password);
     }
