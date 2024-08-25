@@ -29,6 +29,7 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
     }
 
 
+
     private static boolean compareTime(LocalDateTime dateTime1, LocalDateTime dateTime2) {
         // Calculate the duration between the two LocalDateTime instances
         Duration duration = Duration.between(dateTime1, dateTime2);
@@ -87,6 +88,36 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
     //This helps us authorize easily by just decrypting the string and dont have to raise a db call everytime.
     //Expiry time also can be set to the token as well.
 
+    @Override
+    public boolean register(User user) {
+        String sql = "INSERT INTO users (PASSWORD, EMAIL, USERNAME, NAME, ADDRESS, JOIN_DATE, " +
+                "CONTACT_NUMBER, DOB, GENDER, USER_CREATION_TIME, PROFILE_PICTURE_URL, ROLE, " +
+                "ASSIGNED_PROJECTS, LAST_LOGGED_IN_DATETIME) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setString(1, user.getPassword());
+            preparedStatement.setString(2, user.getEmail());
+            preparedStatement.setString(3, user.getUsername());
+            preparedStatement.setString(4, user.getName());
+            preparedStatement.setString(5, user.getAddress());
+            preparedStatement.setDate(6, user.getJoinDate() != null ? Date.valueOf(user.getJoinDate()) : null);
+            preparedStatement.setString(7, user.getContactNumber());
+            preparedStatement.setDate(8, user.getDob() != null ? Date.valueOf(user.getDob()) : null);
+            preparedStatement.setString(9, user.getGender());
+            preparedStatement.setTimestamp(10, user.getUserCreationTime() != null ? new Timestamp(user.getUserCreationTime().getTime()) : null);
+            preparedStatement.setString(11, user.getProfilePictureUrl());
+            preparedStatement.setString(12, user.getRole());
+            preparedStatement.setInt(13, user.getAssignedProjects());
+            preparedStatement.setTimestamp(14, user.getLastLoggedInDatetime() != null ? Timestamp.valueOf(user.getLastLoggedInDatetime()) : null);
+
+            int res = preparedStatement.executeUpdate();
+            return res>0;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 
     //Main methods for Data begins from here.
     @Override
@@ -362,6 +393,7 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
         int managerId = (int) isAuthorized(token).get(1);
 
         if(auth!=0){
+            security.log("Tried Accessing create project method with: "+managerId+" Failed with Token "+LocalDateTime.now().toString(), Level.SEVERE);
             throw new NoAccessException("You are not Authorized to Access");
         }
 
@@ -392,6 +424,7 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
             return projects;
         }
 
+
         return null;
     }
 
@@ -402,6 +435,7 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
         int authLevel = (int) authResult.get(0);
         int userId = (int) authResult.get(1);
         if(authLevel!=0){
+            security.log("Tried Accessing create project method with: "+userId+" Failed with Token "+LocalDateTime.now().toString(), Level.SEVERE);
             throw new NoAccessException("You are not Authorized to Access");
         }
         if (authLevel == 0) { // Assuming Admin has access
@@ -435,6 +469,8 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
         int userId = (int) authResult.get(1);
 
         if(authLevel!=0){
+            security.log("Tried Accessing create project method with: "+userId+" Failed with Token "+LocalDateTime.now().toString(), Level.SEVERE);
+
             throw new NoAccessException("You are not Authorized to Access");
         }
         if (authLevel == 0) { // Assuming only Admin can fetch roles by team member ID
@@ -477,6 +513,8 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
         int authLevel = (int) authResult.get(0);
         int userId = (int) authResult.get(1);
         if(authLevel!=0){
+            security.log("Tried Accessing create project method with: "+userId+" Failed with Token "+LocalDateTime.now().toString(), Level.SEVERE);
+
             throw new NoAccessException("You are not Authorized to Access");
         }else { // Assuming Admin has access
             List<Bug> bugs = new ArrayList<>();
@@ -515,6 +553,8 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
         int authLevel = (int) authResult.get(0);
         int userId = (int) authResult.get(1);
         if(authLevel!=0){
+            security.log("Tried Accessing create project method with: "+userId+" Failed with Token "+LocalDateTime.now().toString(), Level.SEVERE);
+
             throw new NoAccessException("You are not Authorized to Access");
         }
 
@@ -541,6 +581,8 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
         int userId = (int) authResult.get(1);
 
         if(authLevel!=0){
+            security.log("Tried Accessing create project method with: "+userId+" Failed with Token "+LocalDateTime.now().toString(), Level.SEVERE);
+
             throw new NoAccessException("You are not Authorized to Access");
         }
         if (authLevel == 0) { // Assuming Admin has access
@@ -602,6 +644,8 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
             }
             return projects;
         }else
+            security.log("Tried Accessing create project method with: "+id+" Failed with Token "+LocalDateTime.now().toString(), Level.SEVERE);
+
             throw new InvalidTokenException("Token has No access to the system.");
     }
 
@@ -655,6 +699,7 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
                 return null;
             }
         }
+        security.log("Tried Accessing create project method with: "+id+" Failed with Token "+LocalDateTime.now().toString(), Level.SEVERE);
         return null;
     }
 
@@ -702,6 +747,7 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
             return bug;
         }
         else {
+            security.log("Tried Accessing create project method with: "+userId+" Failed with Token "+LocalDateTime.now().toString(), Level.SEVERE);
             throw new InvalidTokenException("User is not authorized to report bugs.");
         }
     }
@@ -730,6 +776,7 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
         int auth = (int) isAuthorized(token).get(0);
         int userId = (int) isAuthorized(token).get(1);
         if(auth>2 || auth<0){ //Because manager developer tester cn access
+            security.log("Tried Accessing create project method with: "+userId+" Failed with Token "+LocalDateTime.now().toString(), Level.SEVERE);
             throw new NoAccessException("No Access Granted to you");
         }
 
@@ -777,6 +824,8 @@ public class BugTrackingDaoImpl implements BugTrackingDao {
         // Return the list of bugs
         return bugsList;
     }
+
+
 
 }
 

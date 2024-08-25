@@ -11,6 +11,8 @@ import java.util.List;
 
 public interface BugTrackingService {
 
+    boolean register(User user);
+
     String login(String username, String password);
 
     boolean addUsersFromJson(String filepath);
